@@ -1,0 +1,333 @@
+﻿@using Resources
+
+@{
+    ViewBag.Title = "MASTER_100";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .popover_parent {
+        position: relative;
+        display: inline-block;
+    }
+
+    .popover {
+        display: none;
+        background: #fff;
+        padding: 1em;
+        border-radius: 4px;
+        position: fixed;
+        /*left: 200px;
+        top: 3em;*/
+        z-index: 1;
+        width: 650px;
+        top: 10%;
+        left: 50%;
+        border: 2px solid rgba(255, 158, 0, 1);
+        max-width: 800px;
+        margin: 5% auto; /* Will not center vertically and won't work in IE6/7. */
+        left: 0;
+        right: 0;
+    }
+
+    .active .popover {
+        display: block;
+    }
+
+    .active a {
+        background: #47E0A4 !important;
+    }
+</style>
+
+<div ng-controller="MASTER_100_Ctrl" id="content" class="ng-cloak">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12">
+            <div class="widget-box widget-color-blue">
+                <div class="widget-header">
+                    <h4 class="widget-title">@Resource.filterStore</h4>
+
+                    <button class="btn btn-xs btn-warning bigger pull-right" style="margin-top: 4px; margin-right: 4px;" ng-click="getStoreByProperty(search)">
+                        <i class="ace-icon fa fa-search"></i>
+                        @Resource.search
+                    </button>
+
+                    <div class="widget-toolbar pull-right">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <div class="row">
+
+                            <!-- Store Code -->
+                            <div class="col-sm-3">
+                                <div>
+                                    <label>@Resource.storeCode</label>
+                                    <input type="text" data-numbers-only="true" maxlength="50" placeholder="@Resource.storeCode" class="col-xs-12 col-sm-12" ng-model="search.STORECODE" ng-enter="getStoreByProperty(search)" />
+                                </div>
+                            </div>
+
+                            <!-- Cost Center -->
+                            <div class="col-sm-3">
+                                <div>
+                                    <label>@Resource.costCenter</label>
+                                    <input type="text" maxlength="50" placeholder="@Resource.costCenter" class="col-xs-12 col-sm-12" ng-model="search.COSTCENTER" ng-enter="getStoreByProperty(search)" />
+                                </div>
+                            </div>
+
+                            <!-- Store Name TH -->
+                            <div class="col-sm-3">
+                                <div>
+                                    <label>@Resource.storeNameTH</label>
+                                    <input type="text" maxlength="80" placeholder="@Resource.storeNameTH" class="col-xs-12 col-sm-12" ng-model="search.STORENAME_TH" ng-enter="getStoreByProperty(search)" />
+                                </div>
+                            </div>
+
+                            <!-- Store Name EN -->
+                            <div class="col-sm-3">
+                                <div>
+                                    <label>@Resource.storeNameEN</label>
+                                    <input type="text" maxlength="80" placeholder="@Resource.storeNameEN" class="col-xs-12 col-sm-12" ng-model="search.STORENAME_EN" ng-enter="getStoreByProperty(search)" />
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <hr style="margin-bottom: 0.5em;" />
+
+                        <div class="row">
+
+                            <!-- Province -->
+                            <div class="col-sm-3">
+                                <div>
+                                    <label style="width: 100%">@Resource.province</label>
+                                    <select id="searchProvince"
+                                            class="chosen-select form-control"
+                                            data-placeholder="@Resource.all"
+                                            ng-model="search.PROVINCE.PROPERTYID"
+                                            ng-options="province.PROPERTYID as province.PROPERTYDESC_TH for province in provinces">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="col-sm-3">
+                                <div>
+                                    <label style="width: 100%">@Resource.status</label>
+                                    <select id="searchStatus"
+                                            class="chosen-select form-control"
+                                            data-placeholder="@Resource.all"
+                                            ng-model="search.ACTIVE"
+                                            ng-options="flag.VALUE as flag.LABEL for flag in activeFlags">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <br />
+    <br />
+
+    <div class="table-header">
+        @Resource.resultStore
+    </div>
+
+    <div>
+        <table id="dynamic-table" class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>@Resource.storeCode</th>
+                    <th>@Resource.costCenter</th>
+                    <th>@Resource.storeNameTH</th>
+                    <th>@Resource.storeNameEN</th>
+                    <th>@Resource.province</th>
+                    <th>@Resource.agreementDocNo</th>
+                    <th>@Resource.licenseDocNo</th>
+                    <th>@Resource.status</th>
+                    <th style="width: 10px"></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr ng-repeat="store in stores track by $index">
+                    <td ng-bind="store.STORECODE"></td>
+                    <td ng-bind="store.COSTCENTER"></td>
+                    <td ng-bind="store.STORENAME_TH"></td>
+                    <td ng-bind="store.STORENAME_EN"></td>
+                    <td ng-bind="store.PROVINCE.PROPERTYDESC_TH"></td>
+                    <td ng-bind="store.AGREEMENTDOCNO"></td>
+                    <td ng-bind="store.LICENSEDOCNO"></td>
+                    <td ng-bind="store.ACTIVE ? '@Resource.active' : '@Resource.inactive'"></td>
+
+                    <td class="center">
+                        <div class="inline pos-rel">
+                            <a href="#modal-table" data-toggle="modal" class="tooltip-info" title="@Resource.edit" ng-click="modalEditStore(store)">
+                                <span class="green">
+                                    <i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
+                                </span>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <br />
+
+    <a href="#modal-table" data-toggle="modal" class="tooltip-info btn btn-xs btn-success pull-right" style="width:150px;border-radius:3px"
+       title="@Resource.add" ng-click="modalAddStore()">
+        <i class="ace-icon fa fa-plus bigger-110"></i>
+        @Resource.add
+    </a>
+
+    <!-- modal dialog -->
+    <div id="modal-table" class="modal fade" tabindex="-1">
+        <div class="modal-dialog" style="width: 60%">
+            <div class="modal-content">
+                <div class="modal-header no-padding">
+                    <div class="table-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <span class="white">&times;</span>
+                        </button>
+
+                        <!-- Modal title: Add/Edit -->
+                        <span ng-switch="modal.mode">
+                            <span ng-switch-when="add">
+                                @Resource.add
+                            </span>
+                            <span ng-switch-when="edit">
+                                @Resource.edit
+                            </span>
+                            <span ng-switch-default>
+                                @Resource.edit
+                            </span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="modal-body no-padding">
+                    <form class="form-horizontal" role="form">
+                        <div class="space-12"></div>
+
+                        <!-- Store Code -->
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label no-padding-right" for="form-input-readonly">
+                                @Resource.storeCode
+                                <span class="red"> *</span>
+                            </label>
+
+                            <div class="col-sm-7">
+                                <input ng-readonly="modal.mode === 'edit'" ng-model="modal.model.STORECODE" type="text" data-numbers-only="true" class="col-xs-10 col-sm-5" maxlength="50" />
+                            </div>
+                        </div>
+
+                        <!-- Cost Center -->
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label no-padding-right" for="form-input-readonly">
+                                @Resource.costCenter
+                                <span class="red"> *</span>
+                            </label>
+
+                            <div class="col-sm-7">
+                                <input ng-model="modal.model.COSTCENTER" type="text" class="col-xs-10 col-sm-5" maxlength="50" />
+                            </div>
+                        </div>
+
+                        <!-- Store Name TH -->
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label no-padding-right" for="form-input-readonly">
+                                @Resource.storeNameTH
+                                <span class="red"> *</span>
+                            </label>
+
+                            <div class="col-sm-7">
+                                <input ng-model="modal.model.STORENAME_TH" type="text" class="col-xs-10 col-sm-5" maxlength="80" />
+                            </div>
+                        </div>
+
+                        <!-- Store Name EN -->
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label no-padding-right" for="form-input-readonly">
+                                @Resource.storeNameEN
+                                <span>&nbsp;&nbsp;</span>
+                            </label>
+                            <div class="col-sm-7">
+                                <input ng-model="modal.model.STORENAME_EN" type="text" class="col-xs-10 col-sm-5" maxlength="80" />
+                            </div>
+                        </div>
+
+                        <!-- Province -->
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label no-padding-right" for="form-input-readonly">
+                                @Resource.province
+                                <span>&nbsp;&nbsp;</span>
+                            </label>
+
+                            <div class="col-sm-3">
+                                <select id="modalProvince"
+                                        class="chosen-select form-control"
+                                        ng-model="modal.model.PROVINCE.PROPERTYID"
+                                        ng-options="province.PROPERTYID as province.PROPERTYDESC_TH for province in provinces">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Active -->
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label no-padding-right" for="form-input-readonly">
+                                @Resource.status
+                                <span>&nbsp;&nbsp;</span>
+                            </label>
+
+                            <div class="col-sm-3">
+                                <select id="modalStatus"
+                                        class="chosen-select form-control"
+                                        ng-model="modal.model.ACTIVE"
+                                        ng-init="modal.model.ACTIVE || activeFlags[0].VALUE"
+                                        ng-options="flag.VALUE as flag.LABEL for flag in activeFlags"></select>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+
+                <div class="modal-footer no-margin-top">
+
+                    <span ng-switch="modal.mode">
+                        <span ng-switch-when="add">
+                            <button class="btn btn-sm btn-info pull-right" ng-click="addStore(modal.model)">
+                                <i class="ace-icon fa fa-times"></i>
+                                @Resource.addStore
+                            </button>
+                        </span>
+
+                        <span ng-switch-default>
+                            <button class="btn btn-sm btn-info pull-right" ng-click="updateStore(modal.model)">
+                                <i class="ace-icon fa fa-times"></i>
+                                @Resource.updateStore
+                            </button>
+                        </span>
+                    </span>
+
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+</div>

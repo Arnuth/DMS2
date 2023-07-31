@@ -1,0 +1,386 @@
+﻿@{
+    ViewBag.Title = "APPROVE_310";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div ng-controller="APPROVE_310_Ctrl" id="content">
+    <div class="row">
+        <div class="col-sm-6">
+
+            <h4 class="row header smaller lighter orange">
+                <span class="col-sm-8">
+                    <i class="ace-icon fa fa-bell"></i>
+                    <span ng-bind="document.REQUEST.DOCTYPENAME"></span>
+                </span><!-- /.col -->
+            </h4>
+
+            <div class="profile-user-info profile-user-info-striped">
+
+                <!--เลขที่ใบคำร้อง-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">เลขที่ใบคำร้อง </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.REQUEST.REQID"></span>
+                    </div>
+                </div>
+
+                <!--เลขที่สัญญา-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">เลขที่สัญญา </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.DOCUMENT_SPACERENTAL.SPACERENTAL_DOCNO"></span>
+                    </div>
+                </div>
+
+                <!--รหัสสาขา-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">รหัสสาขา </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.REQUEST.STORECODE"></span>
+                    </div>
+                </div>
+
+                <!--ชื่อสาขา-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">ชื่อสาขา </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.REQUEST.STORENAME"></span>
+                    </div>
+                </div>
+
+                <!--ชื่อสัญญาฉบับที่-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">สัญญาฉบับที่ </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.REQUEST.DOCNO"></span>
+                    </div>
+                </div>
+
+                <!--ประเภทการเช่าพื้นที่หน้าร้าน-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">ประเภทการเช่าพื้นที่หน้าร้าน </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.DOCUMENT_SPACERENTAL.SPACERENTALTYPENAME"></span>
+                    </div>
+                </div>
+
+                <!--คำอธิบายเพิ่มเติม-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">คำอธิบายเพิ่มเติม </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.DOCUMENT_SPACERENTAL.SPACERENTALDESC"></span>
+                    </div>
+                </div>
+
+                <!--ขนาดพื้นที่-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">ขนาดพื้นที่ </div>
+
+                    <div class="profile-info-value align-middle">
+                        <span class="editable" ng-bind="document.DOCUMENT_SPACERENTAL.SPACERENTALSIZENAME"></span>
+                    </div>
+                </div>
+
+                <!--ค่าบริการ (บาท)-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">ค่าบริการ </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.DOCUMENT_SPACERENTAL.SERVICECHARGETEXT"></span>
+                    </div>
+                </div>
+
+                <!--ค่าไฟฟ้า (บาท)-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">ค่าไฟฟ้า </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.DOCUMENT_SPACERENTAL.ELECTRICCHARGETEXT"></span>
+                    </div>
+                </div>
+
+                <!--เงินประกัน (บาท)-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">เงินประกัน </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.DOCUMENT_SPACERENTAL.INSURANCECHARGETEXT"></span>
+                    </div>
+                </div>
+
+                <!--ผู้รับภาระภาษีโรงเรือน และที่ดิน-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">ผู้รับภาระภาษีโรงเรือน และที่ดิน </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.DOCUMENT_SPACERENTAL.HOUSEANDLANDTAXNAME"></span>
+                    </div>
+                </div>
+
+                <!--ผู้รับภาระภาษีป้าย-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">ผู้รับภาระภาษีป้าย </div>
+
+                    <div class="profile-info-value align-middle">
+                        <span class="editable" ng-bind="document.DOCUMENT_SPACERENTAL.BOARDTAXNAME"></span>
+                    </div>
+                </div>
+
+                <!--ระยะเวลาการเช่า-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">ระยะเวลาการเช่า </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.DOCUMENT_SPACERENTAL.DISPLAY_RENTAL"></span>
+                    </div>
+                </div>
+
+                <!--วันที่ทำสัญญา-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">วันที่ทำสัญญา </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.REQUEST.BCDOC_CREATEDATE"></span>
+                    </div>
+                </div>
+
+                <!--วันที่เริ่มสัญญา-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">วันที่เริ่มสัญญา </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.REQUEST.BCDOC_EFFECTIVEDATE"></span>
+                    </div>
+                </div>
+
+                <!--วันที่สิ้นสุดสัญญา-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">วันที่สิ้นสุดสัญญา </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.REQUEST.BCDOC_EXPIREDATE"></span>
+                    </div>
+                </div>
+
+                <!--กำหนดเก็บเงินค่าบริการแต่ละเดือนภายในวันที่-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">กำหนดเก็บเงินค่าบริการแต่ละเดือนภายในวันที่ </div>
+
+                    <div class="profile-info-value align-middle">
+                        <span class="editable" ng-bind="document.DOCUMENT_SPACERENTAL.PAYMENTOUTWITHINDATE"></span>
+                    </div>
+                </div>
+
+                <!--หากยกเลิกสัญญา ต้องแจ้งล่วงหน้า (วัน)-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">หากยกเลิกสัญญา ต้องแจ้งล่วงหน้า (วัน) </div>
+
+                    <div class="profile-info-value align-middle">
+                        <span class="editable" ng-bind="document.DOCUMENT_SPACERENTAL.CANCELINFODATE"></span>
+                    </div>
+                </div>
+
+                <!--กำหนดการยกเลิก-->
+                <div class="profile-info-row" ng-show="document.REQUEST.REVISIONTYPE == 3">
+                    <div class="profile-info-name">กำหนดการยกเลิก </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.REQUEST.BCDOC_CANCELDATE"></span>
+                    </div>
+                </div>
+
+                <!--รายละเอียดการคืนเงินประกัน-->
+                <div class="profile-info-row" ng-show="document.REQUEST.REVISIONTYPE == 3">
+                    <div class="profile-info-name">รายละเอียดการคืนเงินประกัน </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.REQUEST.DOC_INSURANCEREFUNDFLAGTEXT"></span>
+                    </div>
+                </div>
+
+                <!--หมายเหตุ-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">หมายเหตุ </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.REQUEST.REMARKS"></span>
+                    </div>
+                </div>
+
+                <!--ตั้งค่าแจ้งเตือนล่วงหน้าสัญญาเช่าพื้นที่หน้าร้านหมดอายุ-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">ตั้งค่าแจ้งเตือนล่วงหน้าสัญญาเช่าพื้นที่หน้าร้านหมดอายุ </div>
+
+                    <div class="profile-info-value align-middle">
+                        <span class="editable" ng-bind="document.REQUEST.NOTICEDISPLAY_EXPIRE"></span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+
+            <!--รายละเอียดผู้เช่า-->
+            <h4 class="row header smaller lighter blue">
+                <span class="col-sm-8">
+                    <i class="ace-icon fa fa-bell orange"></i>
+                    <span>รายละเอียดผู้เช่า </span>
+                </span><!-- /.col -->
+            </h4>
+            <div class="profile-user-info profile-user-info-striped">
+
+                <div ng-repeat="lessee in document.DOCUMENT_SPACERENTAL.LESSEEINFO track by $index">
+
+                    <!--รหัสผู้เช่า-->
+                    <div class="profile-info-row">
+                        <div class="profile-info-name">รหัสผู้เช่า </div>
+
+                        <div class="profile-info-value align-middle">
+                            <span class="editable" ng-bind="lessee.VENDORID"></span>
+                        </div>
+                    </div>
+
+                    <!--เลขประจำตัวผู้เสียภาษี-->
+                    <div class="profile-info-row">
+                        <div class="profile-info-name">เลขประจำตัวผู้เสียภาษี </div>
+
+                        <div class="profile-info-value align-middle">
+                            <span class="editable" ng-bind="lessee.CITIZENID"></span>
+                        </div>
+                    </div>
+
+                    <!--ชื่อผู้เช่า-->
+                    <div class="profile-info-row">
+                        <div class="profile-info-name">ชื่อผู้เช่า </div>
+
+                        <div class="profile-info-value align-middle">
+                            <span class="editable" ng-bind="lessee.VENDORNAME"></span>
+                        </div>
+                    </div>
+
+                    <!--ลักษณะผู้เช่า-->
+                    <div class="profile-info-row">
+                        <div class="profile-info-name">ลักษณะผู้เช่า </div>
+
+                        <div class="profile-info-value align-middle">
+                            <span class="editable"
+                                  ng-bind="lessee.LESSEETYPENAME + ((lessee.LESSEETYPE == 3) ? ' (' + lessee.CORPORATIONTYPENAME + ')'
+                                           : (lessee.LESSEETYPE == 4) ? ' (' + lessee.OTHERTYPE + ')' : '')"></span>
+                        </div>
+                    </div>
+
+                    <!--ที่อยู่-->
+                    <div class="profile-info-row">
+                        <div class="profile-info-name">ที่อยู่ </div>
+
+                        <div class="profile-info-value align-middle">
+                            <span class="editable" ng-bind="lessee.ADDRESS"></span>
+                        </div>
+                    </div>
+
+                    <!--เบอร์โทรศัพท์-->
+                    <div class="profile-info-row">
+                        <div class="profile-info-name">เบอร์โทรศัพท์ </div>
+
+                        <div class="profile-info-value align-middle">
+                            <span class="editable" ng-bind="lessee.TELEPHONE"></span>
+                        </div>
+                    </div>
+
+                    <!--Line ID-->
+                    <div class="profile-info-row">
+                        <div class="profile-info-name">Line ID </div>
+
+                        <div class="profile-info-value align-middle">
+                            <span class="editable" ng-bind="lessee.LINEID"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="space-6"></div>
+
+            <!--ข้อมูลบัญชีการรับเงิน-->
+            <div class="widget-box transparent" ng-hide="document.DOCUMENT_SPACERENTAL.CJBANKACCOUNTLIST == null">
+                <div class="widget-header widget-header-flat">
+                    <h4 class="widget-title lighter">
+                        <i class="ace-icon fa fa-star orange"></i>
+                        ข้อมูลบัญชีการรับเงิน
+                    </h4>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main no-padding">
+                        <table class="table table-bordered table-striped">
+                            <thead class="thin-border-bottom">
+                                <tr>
+                                    <th class="center">ชื่อผู้รับเงิน</th>
+                                    <th class="center">ธนาคารที่รับเงิน</th>
+                                    <th class="center">สาขา</th>
+                                    <th class="center">เลขที่บัญชี</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr ng-repeat="bank in document.DOCUMENT_SPACERENTAL.CJBANKACCOUNT track by $index">
+                                    <td ng-bind="bank.CJBANKACCOUNTNAME == null ? 'ไม่ได้ระบุ' : bank.CJBANKACCOUNTNAME"></td>
+                                    <td ng-bind="bank.BANKNAME == null ? 'ไม่ได้ระบุ' : bank.BANKNAME"></td>
+                                    <td ng-bind="bank.BANKBRANCHNAME == null ? 'ไม่ได้ระบุ' : bank.BANKBRANCHNAME"></td>
+                                    <td ng-bind="bank.BANKACCOUNTNO == null ? 'ไม่ได้ระบุ' : bank.BANKACCOUNTNO"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div><!-- /.widget-main -->
+                </div><!-- /.widget-body -->
+            </div><!-- /.widget-box -->
+
+        </div>
+
+        <div class="col-xs-12 padding-2">
+            <h4 class="row header smaller lighter orange">
+                <span class="col-sm-8">
+                    <i class="ace-icon fa fa-bell"></i>
+                    เอกสาร
+                </span><!-- /.col -->
+            </h4>
+
+            <br />
+            <div class="profile-user-info profile-user-info-striped">
+                <div class="profile-info-row" ng-repeat="file in files" track by $index>
+                    <div class="profile-info-name" ng-bind="file.DOCFILETYPE"></div>
+                    <div class="profile-info-name" style="width:200px; text-align:left" ng-bind-template="[ {{file.PATH}} ]"></div>
+                    <div class="profile-info-name" style="width:200px; text-align:left" ng-bind-template="สร้างเอกสารเมื่อ {{file.BC_CREATEDATE}}"></div>
+                    <button class="btn btn-xs btn-grey" style="border-radius:2px;margin:5px" ng-click="downloadDocumentFromServer(file, file.STORENAME, document.REQUEST.DOCTYPENAME)">
+                        <i class="ace-icon fa  fa-cloud-download bigger-110"></i>
+                        ดาวน์โหลด
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-14"></div>
+
+    <div>
+        <button class="btn btn-danger pull-left" ng-click="rejectDocument(document.REQUEST.REQID)">
+            <i class="ace-icon fa fa-reply bigger-100"></i>
+            ส่งกลับแก้ไข
+        </button>
+
+        <button class="btn btn-success pull-right" ng-click="approveDocument(document)">
+            <i class="ace-icon fa fa-check-square-o bigger-100"></i>
+            อนุมัติเอกสาร
+        </button>
+    </div>
+</div>
+

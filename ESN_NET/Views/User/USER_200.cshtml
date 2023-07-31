@@ -1,0 +1,139 @@
+﻿@using Resources
+
+@{
+    ViewBag.Title = "USER_200";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row" ng-controller="USER_200_Ctrl" id="content" data-ng-init="init()">
+
+    <form class="form-horizontal" role="form">
+        <div class="space-12"></div>
+        <div class="form-group">
+            @*<input ng-model="language" type="text" value="@Session["Culture"]"/>*@
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">
+                @Resource.username 
+                <span class="red"> *</span>
+            </label>
+
+            <div class="col-sm-9">
+                <input ng-model="user.USERNAME" type="text" class="col-xs-10 col-sm-5" maxlength="12" pattern="[A-Za-z0-9]{3,12}" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">
+                @Resource.password     
+                <span class="red"> *</span>
+            </label>
+
+            <div class="col-sm-9">
+                <input ng-model="user.USERPASS" type="password" class="col-xs-10 col-sm-5" maxlength="12" pattern="[A-Za-z0-9]{3,12}" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">
+                @Resource.confirmpassword 
+                <span class="red"> *</span>
+            </label>
+
+            <div class="col-sm-9">
+                <input ng-model="user.USERREPASS" type="password" class="col-xs-10 col-sm-5" maxlength="12" pattern="[A-Za-z0-9]{3,12}" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">
+                @Resource.nameEN 
+                <span class="red"> *</span>
+            </label>
+
+            <div class="col-sm-9">
+                <input ng-model="user.NAME_EN" type="text" class="col-xs-10 col-sm-5" maxlength="50" pattern="[A-Za-z]{2,50}" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">
+                @Resource.surnameEN
+                <span class="red"> *</span>
+            </label>
+            <div class="col-sm-9">
+                <input ng-model="user.LASTNAME_EN" type="text" class="col-xs-10 col-sm-5" maxlength="50" pattern="[A-Za-z]{2,50}" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" >@Resource.nameTH </label>
+            <div class="col-sm-9">
+                <input ng-model="user.NAME_TH" type="text" class="col-xs-10 col-sm-5" maxlength="50" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">@Resource.surnameTH </label>
+            <div class="col-sm-9">
+                <input ng-model="user.LASTNAME_TH" type="text" class="col-xs-10 col-sm-5" maxlength="50" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">
+                @Resource.email 
+                <span class="red"> *</span>
+            </label>
+            <div class="col-sm-9">
+                <input ng-model="user.USEREMAIL" type="text" class="col-xs-10 col-sm-5" maxlength="80" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                @Resource.userClass 
+                <span class="red"> *</span>
+            </label>
+
+            <div class="col-sm-9">
+                <select class="chosen-select form-control" id="USERCLASS">
+                    <option ng-repeat="class in classs" value="{{class.USERCLASS}}">{{class.USERCLASSTEXT}}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group" ng-repeat="topic in topics">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">{{topic.PROPERTYTYPE}} </label>
+
+            <div class="col-sm-9">
+                <select multiple="" class="chosen-select form-control" id="{{topic.PROPERTY}}">
+                    <option ng-repeat="subproperty in properties | filter: { PROPERTY: topic.PROPERTY }"
+                            value='{ "TOPIC" : {{topic.PROPERTY}}, "PROPERTY" : {{subproperty.PROPERTYID}} }'>
+                            <text ng-show="showProperty('@Session["Culture"]','en'">{{subproperty.PROPERTYNAME}} - {{subproperty.PROPERTYDESC_EN}}</text> 
+                            <text ng-show="showProperty('@Session["Culture"]','th'">{{subproperty.PROPERTYNAME}} - {{subproperty.PROPERTYDESC_TH}}</text>
+                    </option>
+                </select>
+            </div>
+        </div>
+    </form>
+
+    <br />
+    <div class="">
+        <div class="col-md-offset-3 col-md-9">
+            <button class="btn btn-info" type="button" ng-click="insertUser(user)">
+                <i class="ace-icon fa fa-check bigger-110"></i>
+                @Resource.submit 
+            </button>
+
+            &nbsp; &nbsp; &nbsp;
+            <button class="btn" type="button" ng-click="clearData()">
+                <i class="ace-icon fa fa-undo bigger-110"></i>
+                @Resource.reset 
+            </button>
+        </div>
+    </div>
+
+</div>
+
+
+
+

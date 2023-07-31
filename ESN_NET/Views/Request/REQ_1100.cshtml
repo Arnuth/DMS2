@@ -1,0 +1,277 @@
+﻿@using Resources
+
+@{
+    ViewBag.Title = "REQ_1100";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div ng-controller="REQ_1100_Ctrl" id="content" class="ng-cloak">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12">
+            <div class="widget-box widget-color-blue">
+                <div class="widget-header">
+                    <h4 class="widget-title">@Resource.filterDocument</h4>
+
+                    <button class="btn btn-xs btn-warning bigger pull-right" style="margin-top: 4px; margin-right: 4px;" ng-click="getRequestByProperty(search)">
+                        <i class="ace-icon fa fa-search"></i>
+                        @Resource.search
+                    </button>
+
+                    <div class="widget-toolbar pull-right">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <div class="row">
+
+                            <!-- Doc Run No -->
+                            <div class="col-sm-3">
+                                <label>@Resource.docRunNo</label>
+                                <input type="text" maxlength="50" placeholder="@Resource.docRunNo" class="col-xs-12 col-sm-12" ng-model="search.DOCRUNNO" ng-enter="getRequestByProperty(search)" />
+                            </div>
+
+                            <!-- เลขที่สัญญา -->
+                            <div class="col-sm-3">
+                                <label>@Resource.vehicleRentalDocNo</label>
+                                <input type="text" maxlength="50" placeholder="@Resource.vehicleRentalDocNo" class="col-xs-12 col-sm-12" ng-model="search.VEHICLERENTAL_DOCNO" ng-enter="getRequestByProperty(search)" />
+                            </div>
+
+                            <!-- ประเภทสินทรัพย์ -->
+                            <div class="col-sm-3">
+                                <label style="width: 100%">@Resource.assetType</label>
+                                <select id="assetType"
+                                        class="chosen-select form-control"
+                                        data-placeholder="@Resource.assetType"
+                                        ng-model="search.VEHICLERENTALTYPEID"
+                                        ng-options="flag.PROPERTYID as flag.PROPERTYDESC_TH for flag in vehicleRentalTypes">
+                                    <option value="">@Resource.all</option>
+                                </select>
+                            </div>
+
+                            <!-- Lessee Vendor Name -->
+                            <div class="col-sm-3">
+                                <label style="width: 100%">@Resource.vendorName</label>
+                                <select id="searchLesseeVendoeName"
+                                        class="chosen-select form-control"
+                                        data-placeholder="@Resource.vendorName"
+                                        ng-model="search.LESSORNAMEID"
+                                        ng-options="lessorName.PROPERTYID as lessorName.PROPERTYDESC_TH for lessorName in lessorNames">
+                                    <option value="">@Resource.all</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <hr style="margin-bottom: 0.5em;" />
+
+                        <div class="row">
+
+                            <!-- ยี่ห้อ/รุ่น -->
+                            <div class="col-sm-3">
+                                <label style="width: 100%">@Resource.vehicleModel</label>
+                                <input type="text" maxlength="50" placeholder="@Resource.vehicleModel" class="col-xs-12 col-sm-12" ng-model="search.MODEL" ng-enter="getRequestByProperty(search)" />
+                            </div>
+
+                            <!-- หมายเลขเครื่องยนต์ -->
+                            <div class="col-sm-3">
+                                <label style="width: 100%">@Resource.engineNo</label>
+                                <input type="text" maxlength="50" placeholder="@Resource.engineNo" class="col-xs-12 col-sm-12" ng-model="search.ENGINE_NUMBER" ng-enter="getRequestByProperty(search)" />
+                            </div>
+
+                            <!-- หมายเลขทะเบียนรถ -->
+                            <div class="col-sm-3">
+                                <label style="width: 100%">@Resource.vehicleLicense</label>
+                                <input type="text" maxlength="50" placeholder="@Resource.vehicleLicense" class="col-xs-12 col-sm-12" ng-model="search.VEHICLE_LICENSE" ng-enter="getRequestByProperty(search)" />
+                            </div>
+
+                            <!-- User Request Id -->
+                            <div class="col-sm-3">
+                                <label style="width: 100%">@Resource.userRequestId</label>
+                                <select id="searchUserRequestId"
+                                        class="chosen-select form-control"
+                                        data-placeholder="@Resource.userRequestId"
+                                        ng-model="search.USERREQUESTID"
+                                        ng-options="user.USERID as (user.NAME_TH + ' ' + user.LASTNAME_TH) for user in users">
+                                    <option value="">@Resource.all</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <hr style="margin-bottom: 0.5em;" />
+
+                        <div class="row">
+
+                            <!-- USERVERIFYID -->
+                            <div class="col-sm-3">
+                                <label style="width: 100%">@Resource.userVerifyId</label>
+                                <select id="searchUserVerifyId"
+                                        class="chosen-select form-control"
+                                        data-placeholder="@Resource.userVerifyId"
+                                        ng-model="search.USERVERIFYID"
+                                        ng-options="user.USERID as (user.NAME_TH + ' ' + user.LASTNAME_TH) for user in users">
+                                    <option value="">@Resource.all</option>
+                                </select>
+                            </div>
+
+                            <!-- DOC_EFFECTIVEDATE -->
+                            <div class="col-sm-3">
+                                <label style="width: 100%">@Resource.docEffectiveDate</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                    </span>
+                                    <input id="effectiveDateRange" class="form-control date-range-picker" readonly="" style="cursor: pointer"  type="text" />
+                                </div>
+                            </div>
+
+                            <!-- DOC_EXPIREDATE -->
+                            <div class="col-sm-3">
+                                <label style="width: 100%">@Resource.docExpireDate</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                    </span>
+                                    <input id="expireDateRange" class="form-control date-range-picker" readonly="" style="cursor: pointer"  type="text" />
+                                </div>
+                            </div>
+
+                            <!-- UPDATEDATE -->
+                            <div class="col-sm-3">
+                                <label style="width: 100%">@Resource.updateDate</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                    </span>
+                                    <input id="updateDateRange" class="form-control date-range-picker" readonly="" style="cursor: pointer"  type="text" />
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <br />
+    <br />
+
+    <div class="table-header">
+        @Resource.resultDoc
+    </div>
+
+    <div>
+        <table id="dynamic-table" class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th class="center">@Resource.docRunNo</th>
+                    <th class="center">@Resource.vehicleRentalDocNo</th>
+                    <th class="center">@Resource.assetType</th>
+                    <th class="center">@Resource.vendorName</th>
+                    <th class="center">@Resource.docEffectiveDate</th>
+                    <th class="center">@Resource.docExpireDate</th>
+                    <th class="center">@Resource.userRequestId</th>
+                    <th class="center">@Resource.approveUser</th>
+                    <th class="center">@Resource.updateDate</th>
+                    <th style="width: 10px"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="row in requests track by $index">
+                    <td>
+                        <span ng-if="!!row.DOCRUNNO">
+                            <i class="glyphicon glyphicon-folder-open" style="margin-right: 0.25em;"></i>
+                            <span ng-bind="row.DOCRUNNO"></span>
+                        </span>
+                    </td>
+                    <td ng-bind="row.VEHICLERENTAL_DOCNO"></td>
+                    <td ng-bind="row.VEHICLERENTALTYPE"></td>
+                    <td ng-bind="row.LESSORNAME"></td>
+                    <td class="center"><span style="display:none" ng-bind="row.RENTAL_EFFECTIVEDATE | date:'yyyy/MM/dd'"></span><span ng-bind="row.BCRENTAL_EFFECTIVEDATE | date:'dd/MM/yyyy'"></span></td>
+                    <td class="center"><span style="display:none" ng-bind="row.RENTAL_EXPIREDATE | date:'yyyy/MM/dd'"></span><span ng-bind="row.BCRENTAL_EXPIREDATE | date:'dd/MM/yyyy'"></span></td>
+                    <td class="center" ng-bind="row.USERREQUEST"></td>
+                    <td class="center" ng-bind="row.USERVERIFY"></td>
+                    <td class="center"><span style="display:none" ng-bind="row.LASTUPDATE | date:'yyyy/MM/dd HH:mm'"></span><span ng-bind="row.BCLASTUPDATE | date:'dd/MM/yyyy HH:mm'"></span></td>
+
+                    <td class="center">
+                        <a href="#modal-table" data-toggle="modal" title="Request New Revision" ng-click="setRequestRevision(row)">
+                            <i class="ace-icon fa fa-pencil-square-o bigger-130 blue"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="modal-table" class="modal fade" tabindex="-1">
+        <div class="modal-dialog" style="width: 60%">
+            <div class="modal-content">
+                <div class="modal-header no-padding">
+                    <div class="table-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <span class="white">&times;</span>
+                        </button>
+                        ขอแก้ไขเอกสาร
+                    </div>
+                </div>
+
+                <div class="modal-body no-padding">
+                    <form class="form-horizontal" role="form">
+                        <div class="space-12"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">เลขที่เอกสารปัจจุบัน :</label>
+                            <div class="col-sm-9">
+                                <label class="control-label no-padding-right" ng-bind="revisionOld"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">เลขที่เอกสารหลังการแก้ไข :</label>
+                            <div class="col-sm-9">
+                                <label class="control-label no-padding-right" ng-bind="revisionNew"></label>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">เหตุผลในการขอแก้ไข :</label>
+                            <div class="col-sm-9">
+
+                                <div class="radio" ng-repeat="revisiontype in revisiontypes">
+                                    <label>
+                                        <input name="rdoCause" type="radio" class="ace" ng-attr-value="{{revisiontype.PROPERTYID}},{{revisiontype.PROPERTYDESC_TH}}" />
+                                        <span class="lbl" ng-bind-template=" {{ revisiontype.PROPERTYDESC_TH }}"></span>
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">หมายเหตุ :</label>
+                            <div class="col-sm-8 col-offset-sm-4">
+                                <textarea class="form-control limited" ng-model="revisionRemark" maxlength="1000" style="margin-top:10px"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer no-margin-top">
+                    <button class="btn btn-sm btn-success pull-right" data-dismiss="modal" ng-click="insertNewRevision(revisionOld, revisionRemark)">
+                        <i class="ace-icon fa fa-save"></i>
+                        ตกลง
+                    </button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+

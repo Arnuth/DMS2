@@ -1,0 +1,34 @@
+﻿<ul class="nav nav-list" ng-controller="MenuCtrl" id="menuHtml">
+    <li class="" ng-repeat="menu in menus | unique: 'MAINMENU'">
+        <a href="#" class="dropdown-toggle">
+            <i class="menu-icon fa fa-list"></i>
+            <span class="menu-text" ng-bind="menu.MAINMENU_DESC"></span>
+
+            <b class="arrow fa fa-angle-down"></b>
+        </a>
+
+        <b class="arrow"></b>
+
+        <ul class="submenu">
+            <li class="" ng-repeat="submenu in menus | filter: {MAINMENU:menu.MAINMENU}" ng-click="setNavigation(submenu)">
+                <a ng-href="../{{submenu.MAINMENU}}/{{submenu.MENUVIEWID}}?param=@DateTime.Now">
+                    <i class="menu-icon fa fa-caret-right"></i>
+                    <label ng-show="showMenu('@Session["Culture"]','en')" ng-bind="submenu.SUBMENUDESC_EN"></label>
+                    <label ng-show="showMenu('@Session["Culture"]','th')" ng-bind="submenu.SUBMENUDESC_TH"></label>
+                </a>
+
+                <b class="arrow"></b>
+            </li>
+        </ul>
+    </li>
+    <li class="">
+        <a href="../REPORT/RPT_100">
+            <i class="menu-icon fa fa-list"></i>
+            <span class="menu-text">รายงาน </span>
+        </a>
+    </li>
+
+
+</ul>
+
+

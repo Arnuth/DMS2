@@ -1,0 +1,595 @@
+﻿@using Resources;
+
+@{
+    ViewBag.Title = "REQ_800";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /* blue border on dydnamic data */
+    .data-dynamic {
+        border: 2px solid #6fb3e0;
+        border-radius: 15px;
+        padding-top: 5px;
+        /*padding-bottom: 10px;*/
+    }
+
+    /* progress bar */
+    .progress-wrp {
+        border: 1px solid #0099CC;
+        padding: 1px;
+        position: relative;
+        height: 30px;
+        border-radius: 3px;
+        /*margin: 10px;*/
+        text-align: left;
+        background: #fff;
+        box-shadow: inset 1px 3px 6px rgba(0, 0, 0, 0.12);
+    }
+
+        .progress-wrp .progress-bar {
+            height: 100%;
+            border-radius: 3px;
+            background-color: #f7c01b;
+            width: 0;
+            box-shadow: inset 1px 1px 10px rgba(0, 0, 0, 0.11);
+        }
+
+        .progress-wrp .status {
+            top: 3px;
+            left: 50%;
+            position: absolute;
+            display: inline-block;
+            color: #000000;
+        }
+</style>
+
+<div class="row" ng-controller="REQ_800_Ctrl" id="content">
+    <h2>{{document.DOCRUNNO}}</h2>
+
+    <form class="form-horizontal" role="form">
+        <div class="space-12"></div>
+
+        <!--เลขที่สัญญา-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">เลขที่สัญญา <span class="red">*</span></label>
+
+            <div class="col-sm-9">
+                <input ng-model="doc.SPACERENTAL_DOCNO" type="text" maxlength="30" class="col-xs-10 col-sm-5" />
+            </div>
+        </div>
+
+        <!--ประเภทการเช่าพื้นที่หน้าร้าน-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">ประเภทการเช่าพื้นที่หน้าร้าน <span class="red">*</span></label>
+
+            <div class="col-sm-9">
+                @* split value on setData func *@
+                <select class="chosen-select form-control" ng-model="doc.SPACERENTALTYPEID" ng-change="selectSize(doc.SPACERENTALTYPEID)" id="SPACERENTALTYPEID">
+                    <option value="">โปรดเลือก</option>
+                    <option value="{{spacerentaltype.PROPERTYID}} - {{spacerentaltype.PROPERTYNAME}}" name="{{spacerentaltype.PROPERTYNAME}}" ng-repeat="spacerentaltype in spacerentaltypes">{{spacerentaltype.PROPERTYDESC_TH}}</option>
+                </select>
+            </div>
+        </div>
+
+        <!--คำอธิบายเพิ่มเติม-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">คำอธิบายเพิ่มเติม </label>
+            <div class="col-sm-9">
+                <div class="col-xs-10 col-sm-5 no-padding">
+                    <textarea class="form-control limited " maxlength="150" id="DEPOSITREMARKS" ng-model="doc.SPACERENTALDESC"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!--ขนาดพื้นที่-->
+        <div class="form-group" id="spaceSize" ng-hide="validateSpaceRentalSizeRequireBySpaceRentalType(doc.SPACERENTALTYPEID)">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">ขนาดพื้นที่ <span class="red">*</span></label>
+            <div class="col-sm-9">
+                <select class="chosen-select form-control" ng-model="doc.SPACERENTALSIZEID" id="spaceRentalSizeDDL">
+                    <option selected="selected" value="">โปรดเลือก</option>
+                    <option value="{{spacerentalsize.SPACERENTALSIZEID}}" name="{{spacerentalsize.PROPERTYNAME}}" ng-repeat="spacerentalsize in spacerentalsizelist">{{spacerentalsize.PROPERTYDESC_TH}}</option>
+                </select>
+            </div>
+        </div>
+
+        <!--รหัสสาขา-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">รหัสสาขา <span class="red" id="requireBySpaceRentalType" ng-hide="validateStoreCodeRequireBySpaceRentalType(doc.SPACERENTALTYPEID)">*</span></label>
+
+            <div class="col-sm-9">
+                <select class="chosen-select form-control" ng-model="req.STORECODE" id="STORECODE">
+                    <option value="">โปรดเลือก</option>
+                    <option value="{{store.STORECODE}}" ng-repeat="store in stores">{{store.STORECODE}} - {{store.STORENAME_TH}}</option>
+                </select>
+            </div>
+        </div>
+
+        <!--รายละเอียดผู้เช่า-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">รายละเอียดผู้เช่า <span class="red">*</span></label>
+        </div>
+
+        <!--ผู้เช่า-->
+        <div class="form-group" ng-repeat="lessee in lessees">
+            <div class="col-sm-10 col-sm-offset-1 data-dynamic">
+                <!--รหัสผู้เช่า-->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">รหัสผู้เช่า </label>
+                    <div class="col-sm-6">
+                        <input id="code{{lessee}}" maxlength="15" type="text" class="form-control" ng-keypress="validateNumber($event)" />
+                    </div>
+                </div>
+                <!--เลขประจำตัวผู้เสียภาษี-->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">เลขประจำตัวผู้เสียภาษี </label>
+                    <div class="col-sm-6">
+                        <input id="citizenid{{lessee}}" maxlength="13" type="text" class="form-control" ng-keypress="validateNumber($event)" />
+                    </div>
+                </div>
+                <div class="hr hr-16 hr-dotted"></div>
+                <!--ชื่อผู้เช่า-->
+                <div class="form-group no-margin-bottom">
+                    <label class="col-sm-3 control-label no-padding-right">ชื่อผู้เช่า <span class="red">*</span></label>
+                    <div class="form-group col-sm-9">
+                        <label class="col-sm-2 form-control-static">
+                            <input name="vendorFlag-{{lessee}}" type="radio" value="1" class="ace" id="vendorFlag{{lessee}}" onchange="angular.element(this).scope().selectLesseeVendor(this.name, this.value)" />
+                            <span class="lbl"> ธนาคาร</span>
+                        </label>
+                        <div class="col-sm-10">
+                            <select class="chosen-select form-control" name="bank-{{lessee}}" id="bank{{lessee}}">
+                                <option value="">โปรดเลือก</option>
+                                <option value="{{bank.PROPERTYID}}" ng-repeat="bank in banks">{{bank.PROPERTYDESC_TH}}</option>
+                            </select>
+                        </div>
+                        &nbsp;&nbsp;&nbsp;<label class="col-sm-offset-0 form-control-static" style="font-size:12px;"><span class="lbl">สำหรับกรณีสัญญาเช่าพื้นที่หน้าร้านประเภทตู้เอทีเอ็ม</span></label>
+                    </div>
+                    <label class="col-sm-3 control-label no-padding-right"></label>
+                    <div class="form-group col-sm-9">
+                        <label class="col-sm-2 form-control-static">
+                            <input name="vendorFlag-{{lessee}}" type="radio" value="2" class="ace" onchange="angular.element(this).scope().selectLesseeVendor(this.name, this.value)" />
+                            <span class="lbl"> โปรดระบุ</span>
+                        </label>
+                        <div class="col-sm-10">
+                            <input name="vendorName-{{lessee}}" id="vendorName{{lessee}}" maxlength="80" type="text" class="col-xs-10 col-sm-5" />
+                        </div>
+                        &nbsp;&nbsp;&nbsp;<label class="col-sm-offset-0 form-control-static" style="font-size:12px;"><span class="lbl">สำหรับกรณีสัญญาเช่าพื้นที่หน้าร้านประเภทอื่นๆที่ไม่ใช่ตู้เอทีเอ็ม</span></label>
+                    </div>
+                </div>
+                <div class="hr hr-16 hr-dotted"></div>
+                <!--ลักษณะผู้เช่า-->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">ลักษณะผู้เช่า <span class="red">*</span></label>
+
+                    <div class="col-sm-9">
+                        <select class="chosen-select form-control" id="type{{lessee}}" name="{{lessee}}" onchange="angular.element(this).scope().setDisabledLessee(this.name, this.value)">
+                            <option value="">โปรดเลือก</option>
+                            <option value="{{lessortype.PROPERTYID}}" ng-repeat="lessortype in lessortypes">{{lessortype.PROPERTYDESC_TH}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" id="view{{lessee}}" style="display:none">
+                    <label class="col-sm-3 control-label no-padding-right">โปรดระบุ <span class="red">*</span></label>
+                    <div class="col-sm-9">
+                        <input id="otherType{{lessee}}" maxlength="80" type="text" class="col-xs-10 col-sm-5" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right"></label>
+
+                    <div class="col-sm-9">
+                        <div class="radio">
+                            <label>
+                                <input name="corporate{{lessee}}" type="radio" value="{{lessee}},false" class="ace" id="corporatetax{{lessee}}" />
+                                <span class="lbl"> บริษัท</span>
+                            </label>
+                            <label>
+                                <input name="corporate{{lessee}}" type="radio" value="{{lessee}},true" class="ace" />
+                                <span class="lbl"> ห้างหุ้นส่วนจำกัด</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hr hr-16 hr-dotted"></div>
+                <!--ที่อยู่-->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">ที่อยู่ </label>
+                    <div class="col-sm-9">
+                        <div class="col-xs-10 col-sm-5 no-padding">
+                            <textarea class="form-control limited " maxlength="150" id="address{{lessee}}"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <!--เบอร์โทรศัพท์-->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">เบอร์โทรศัพท์ </label>
+                    <div class="col-sm-9">
+                        <input id="tel{{lessee}}" type="text" maxlength="13" class="col-xs-10 col-sm-5" ng-keypress="validatePhoneNumber($event)" />
+                    </div>
+                </div>
+                <!--Line ID-->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">Line ID </label>
+                    <div class="col-sm-9">
+                        <input id="lineID{{lessee}}" type="text" maxlength="15" class="col-xs-10 col-sm-5" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--ประเภทค่าบริการ-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">ประเภทค่าบริการ <span class="red" ng-hide="validateServiceChargeRequireBySpaceRentalType(doc.SPACERENTALTYPEID)">*</span></label>
+            <div class="col-sm-9">
+                <label class="radio col-sm-2" ng-repeat="servicechangetype in servicechangetypes">
+                    <input name="{{servicechangetype.PROPERTYNAME}}" type="radio" ng-model="doc.SERVICECHARGETYPE" value="{{servicechangetype.PROPERTYID}}" class="ace col-lg-offset-0" id="{{servicechangetype.PROPERTYNAME+'_'+servicechangetype.PROPERTYID}}" />
+                    <span class="lbl col-lg-offset-1"> {{servicechangetype.PROPERTYDESC_TH}}</span>
+                </label>
+            </div>
+        </div>
+
+        <!--ค่าบริการ-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">ค่าบริการ (บาท หรือ %) <span class="red" ng-hide="validateServiceChargeRequireBySpaceRentalType(doc.SPACERENTALTYPEID)">*</span></label>
+            <div class="col-sm-9">
+                <input ng-model="doc.SERVICECHARGEAMOUNT" type="text" maxlength="18" class="col-xs-10 col-sm-5 text-right" ng-keypress="validateAmountNumber($event)" oninput="this.value=angular.element(this).scope().currencyAmountNumber(this.value)"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-3 control-label no-padding-right"></div>
+            <div class="col-sm-9">
+                <div class="radio">
+                    <label>
+                        <input name="SERVICECHARGETAXFLAG" ng-model="doc.SERVICECHARGETAXFLAG" type="radio" value="1" class="ace" id="SERVICECHARGETAXFLAG" />
+                        <span class="lbl"> ไม่รวมภาษีมูลค่าเพิ่ม</span>
+                    </label>
+                    <label>
+                        <input name="SERVICECHARGETAXFLAG" ng-model="doc.SERVICECHARGETAXFLAG" type="radio" value="2" class="ace" />
+                        <span class="lbl"> รวมภาษีมูลค่าเพิ่ม</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="hr hr-16 hr-dotted"></div>
+
+        <!--ค่าไฟฟ้า-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">ค่าไฟฟ้า (บาท) </label>
+            <div class="col-sm-9">
+                <input ng-model="doc.ELECTRICCHARGEAMOUNT" type="text" maxlength="18" class="col-xs-10 col-sm-5 text-right" ng-keypress="validateAmountNumber($event)" oninput="this.value=angular.element(this).scope().currencyAmountNumber(this.value)" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-3 control-label no-padding-right"></div>
+            <div class="col-sm-9">
+                <div class="radio">
+                    <label>
+                        <input name="ELECTRICCHARGETAXFLAG" type="radio" ng-model="doc.ELECTRICCHARGETAXFLAG" value="1" class="ace" id="ELECTRICCHARGETAXFLAG" />
+                        <span class="lbl"> ไม่รวมภาษีมูลค่าเพิ่ม</span>
+                    </label>
+                    <label>
+                        <input name="ELECTRICCHARGETAXFLAG" type="radio" ng-model="doc.ELECTRICCHARGETAXFLAG" value="2" class="ace" />
+                        <span class="lbl"> รวมภาษีมูลค่าเพิ่ม</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="hr hr-16 hr-dotted"></div>
+
+        <!--ค่าน้ำประปา-->
+        <div class="form-group hidden">
+            <label class="col-sm-3 control-label no-padding-right">ค่าน้ำประปา (บาท) </label>
+            <div class="col-sm-9">
+                <input ng-model="doc.WATERCHARGEAMOUNT" type="text" maxlength="18" class="col-xs-10 col-sm-5 text-right" ng-keypress="validateAmountNumber($event)" oninput="this.value=angular.element(this).scope().currencyAmountNumber(this.value)" />
+            </div>
+        </div>
+        <div class="form-group hidden">
+            <div class="col-sm-3 control-label no-padding-right"></div>
+            <div class="col-sm-9">
+                <div class="radio">
+                    <label>
+                        <input name="WATERCHARGETAXFLAG" type="radio" ng-model="doc.WATERCHARGETAXFLAG" value="1" class="ace" />
+                        <span class="lbl"> ไม่รวมภาษีมูลค่าเพิ่ม</span>
+                    </label>
+                    <label>
+                        <input name="WATERCHARGETAXFLAG" type="radio" ng-model="doc.WATERCHARGETAXFLAG" value="2" class="ace" />
+                        <span class="lbl"> รวมภาษีมูลค่าเพิ่ม</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        @*<div class="hr hr-16 hr-dotted"></div>*@
+
+        <!--เงินประกัน-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">เงินประกัน (บาท) </label>
+            <div class="col-sm-9">
+                <input ng-model="doc.INSURANCECHARGEAMOUNT" type="text" maxlength="18" class="col-xs-10 col-sm-5 text-right" ng-keypress="validateAmountNumber($event)" oninput="this.value=angular.element(this).scope().currencyAmountNumber(this.value)"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-3 control-label no-padding-right"></div>
+            <div class="col-sm-9">
+                <div class="radio">
+                    <label>
+                        <input name="INSURANCECHARGETAXFLAG" type="radio" ng-model="doc.INSURANCECHARGETAXFLAG" value="1" class="ace" id="INSURANCECHARGETAXFLAG" />
+                        <span class="lbl"> ไม่รวมภาษีมูลค่าเพิ่ม</span>
+                    </label>
+                    <label>
+                        <input name="INSURANCECHARGETAXFLAG" type="radio" ng-model="doc.INSURANCECHARGETAXFLAG" value="2" class="ace" />
+                        <span class="lbl"> รวมภาษีมูลค่าเพิ่ม</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="hr hr-16 hr-dotted"></div>
+
+        <!--ผู้รับภาระภาษีโรงเรือนและที่ดิน-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">ผู้รับภาระภาษีโรงเรือนและที่ดิน <span class="red">*</span></label>
+            <div class="col-sm-9">
+                <div class="radio">
+                    <label>
+                        <input name="HOUSEANDLANDTAXID" type="radio" ng-model="doc.HOUSEANDLANDTAXID" value="1" class="ace" id="HOUSEANDLANDTAXID" />
+                        <span class="lbl"> ผู้ให้บริการ</span>
+                    </label>
+                    <label>
+                        <input name="HOUSEANDLANDTAXID" type="radio" ng-model="doc.HOUSEANDLANDTAXID" value="2" class="ace" />
+                        <span class="lbl"> ผู้รับบริการ</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!--ผู้รับภาระภาษีป้าย-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">ผู้รับภาระภาษีป้าย <span class="red">*</span></label>
+            <div class="col-sm-9">
+                <div class="radio">
+                    <label>
+                        <input name="BOARDTAXID" type="radio" ng-model="doc.BOARDTAXID" value="1" class="ace" id="BOARDTAXID" />
+                        <span class="lbl"> ผู้ให้บริการ</span>
+                    </label>
+                    <label>
+                        <input name="BOARDTAXID" type="radio" ng-model="doc.BOARDTAXID" value="2" class="ace" />
+                        <span class="lbl"> ผู้รับบริการ</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!--ระยะเวลาการเช่า-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">ระยะเวลาการเช่า <span class="red">*</span></label>
+            <div class="col-sm-1">
+                <div class="input-group col-sm-12">
+                    <input class="form-control" maxlength="2" ng-model="doc.RENTALNUMBER" type="text" only-digits />
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <select class="chosen-select form-control" ng-model="doc.RENTALUNIT">
+                    <option value="">โปรดเลือก</option>
+                    <option class="hidden" value="DAY">วัน</option>
+                    <option value="MONTH">เดือน</option>
+                    <option value="YEAR">ปี</option>
+                </select>
+            </div>
+        </div>
+
+        <!--วันที่ทำสัญญา-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">วันที่ทำสัญญา <span class="red">*</span></label>
+            <div class="col-sm-9">
+                <div class="input-group col-xs-10 col-sm-5">
+                    <input class="form-control date-picker-max-today" ng-model="req.DOC_CREATEDATE" type="text" data-date-format="dd/mm/yyyy" />
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar bigger-110"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!--วันที่เริ่มสัญญา-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">วันที่เริ่มสัญญา <span class="red">*</span></label>
+            <div class="col-sm-9">
+                <div class="input-group col-xs-10 col-sm-5">
+                    <input class="form-control date-picker-max-year" ng-model="req.DOC_EFFECTIVEDATE" type="text" data-date-format="dd/mm/yyyy" />
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar bigger-110"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!--วันที่สิ้นสุดสัญญา-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">วันที่สิ้นสุดสัญญา <span class="red">*</span></label>
+            <div class="col-sm-9">
+                <div class="input-group col-xs-10 col-sm-5">
+                    <input class="form-control date-picker-min-today-max-5y" ng-model="req.DOC_EXPIREDATE" type="text" data-date-format="dd/mm/yyyy" />
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar bigger-110"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!--กำหนดเก็บเงินค่าบริการแต่ละเดือนภายในวันที่-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">กำหนดเก็บเงินค่าบริการแต่ละเดือนภายในวันที่ <span class="red">*</span></label>
+
+            <div class="col-sm-9">
+                <select class="chosen-select form-control" ng-model="doc.PAYMENTOUTWITHINDATE" id="PAYMENTOUTWITHINDATE">
+                    <option value="">โปรดเลือก</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    <option value="25">25</option>
+                    <option value="26">26</option>
+                    <option value="27">27</option>
+                    <option value="28">28</option>
+                    <option value="29">29</option>
+                    <option value="30">30</option>
+                    <option value="31">31</option>
+                </select>
+            </div>
+        </div>
+
+        <!--ข้อมูลบัญชีการรับเงิน-->
+        <div class="form-group" ng-hide="validateSpaceRentalSizeRequireBySpaceRentalType(doc.SPACERENTALTYPEID)">
+            <label class="col-sm-3 control-label no-padding-right">ข้อมูลบัญชีการรับเงิน <span class="red">*</span></label>
+        </div>
+
+        <!--ชื่อผู้รับเงิน-->
+        <div class="form-group ng-scope" ng-repeat="cjbank in cjbanklist" ng-hide="validateSpaceRentalSizeRequireBySpaceRentalType(doc.SPACERENTALTYPEID)">
+            <div class="col-sm-10 col-sm-offset-1 data-dynamic">
+                <i>{{$index + 1}}</i>
+                @*<div class="col-sm-12">
+                    <a href="#" ng-hide="{{$first}}" class="tooltip-error pull-right" data-rel="tooltip" title="@Resource.delete" ng-click="deleteReceivePersonNumber(person)">
+                        <span class="red">
+                            <i class="ace-icon fa fa-remove bigger-120"></i>
+                        </span>
+                    </a>
+                </div>*@
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">ชื่อผู้รับเงิน </label>
+                    <div class="form-control-static col-sm-9"><span class="lbl" id="name{{cjbank}}" value="{{cjbank.CJBANKACCOUNTINFOID}}"> {{cjbank.CJBANKACCOUNTNAME}}</span></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">ธนาคารที่รับเงิน </label>
+                    <div class="form-control-static col-sm-9"><span class="lbl" id="bank{{cjbank}}" value="{{cjbank.BANKID}}"> {{cjbank.PROPERTYDESC_TH}}</span></div>
+                    @*<div class="col-sm-9">
+                        <select class="chosen-select form-control" id="bank{{person}}">
+                            <option value="">โปรดเลือก</option>
+                            <option value="{{bank.PROPERTYID}}" ng-repeat="bank in banks">{{bank.PROPERTYDESC_TH}}</option>
+                        </select>
+                    </div>*@
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">สาขา </label>
+                    <div class="form-control-static col-sm-9"><span class="lbl" id="branch{{cjbank}}"> {{cjbank.BANKBRANCHNAME}}</span></div>
+
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">เลขที่บัญชี </label>
+                    <div class="form-control-static col-sm-9"><span class="lbl" id="book{{cjbank}}"> {{cjbank.BANKACCOUNTNO}}</span></div>
+                </div>
+            </div>
+        </div>
+
+        @*<div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"></label>
+            <div class="col-sm-6" style="padding-top:8px;">
+            </div>
+            <div class="col-sm-2 text-right" style="padding-right: 0;">
+                <button class="btn btn-info" ng-click="addReceivePersonNumber()"><i class="ace-icon fa fa-plus"></i>เพิ่มบัญชี </button>
+            </div>
+        </div>*@
+
+        <div class="hr hr-16 hr-dotted"></div>
+
+        <!--หากยกเลิกสัญญา ต้องแจ้งล่วงหน้า (วัน)-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">หากยกเลิกสัญญา ต้องแจ้งล่วงหน้า (วัน) <span class="red">*</span></label>
+            <div class="col-sm-2">
+                <div class="input-group col-sm-12">
+                    <input class="form-control" maxlength="3" ng-model="doc.CANCELINFODATE" type="text" only-digits />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">แนบเอกสาร (รูปภาพ, pdf) <span class="red">*</span></label>
+        </div>
+
+        <!--File หนังสือสัญญาเช่าพื้นที่หน้าร้าน-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">หนังสือสัญญาเช่าพื้นที่หน้าร้าน </label>
+
+            <div class="col-sm-3">
+                <input type="file" id="spaceRentalFile" class="file_input" />
+            </div>
+            <div class="col-sm-3">
+            </div>
+            <div id="spaceRentalFileprogress" class="progress-wrp col-sm-3" style="display:none">
+                <div class="progress-bar"></div>
+                <div class="status">0%</div>
+            </div>
+        </div>
+
+        <!--File อื่นๆ (ถ้ามี)-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">อื่นๆ (ถ้ามี) </label>
+
+            <div class="col-sm-3">
+                <input multiple="" type="file" id="otherFile" class="file-input-multi" />
+            </div>
+            <div class="col-sm-3">
+            </div>
+            <div id="otherFileprogress" class="progress-wrp col-sm-3" style="display:none">
+                <div class="progress-bar"></div>
+                <div class="status">0%</div>
+            </div>
+        </div>
+
+        <!--ตั้งค่าการแจ้งเตือนล่วงหน้า-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">ตั้งค่าการแจ้งเตือนล่วงหน้า <span class="red">*</span></label>
+            <div class="col-sm-1">
+                <div class="input-group col-sm-12">
+                    <input class="form-control" maxlength="2" ng-model="req.NOTICENUMBER_EXPIRE" type="text" only-digits />
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <select class="chosen-select form-control" ng-model="req.NOTICEUNIT_EXPIRE">
+                    <option value="">โปรดเลือก</option>
+                    <option value="DAY">วัน</option>
+                    <option value="MONTH">เดือน</option>
+                    <option value="YEAR">ปี</option>
+                </select>
+            </div>
+        </div>
+
+    </form>
+
+    <div class="">
+        <button class="btn btn-info" type="button" ng-click="saveDraft(req, doc)">
+            <i class="ace-icon fa fa-check bigger-110"></i>
+            บันทึกฉบับร่าง
+        </button>
+        <button class="btn btn-info pull-right" type="button" ng-click="submitDocument(req, doc)">
+            <i class="ace-icon fa fa-check bigger-110"></i>
+            ส่งคำร้อง
+        </button>
+    </div>
+
+</div>
+

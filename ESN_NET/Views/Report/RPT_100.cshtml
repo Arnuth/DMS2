@@ -1,0 +1,225 @@
+﻿@{
+    ViewBag.Title = "RPT_100";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="tabbable" ng-controller="RPT_100_Ctrl" id="content">
+
+    <div class="tab-content no-border padding-24 col-xs-12 col-sm-4">
+        <div id="faq-tab-1" class="tab-pane fade in active">
+            <h4 class="blue">
+                <i class="ace-icon fa fa-file-text bigger-110"></i>
+                รายงาน
+            </h4>
+
+            <div class="space-8"></div>
+
+            <div class="panel-group accordion-style1 accordion-style2">
+
+                <div class="panel panel-default" ng-repeat="groupreport in groupreports | unique: 'REPORTGROUP_EN'">
+                    <div class="panel-heading">
+                        <a href="#{{groupreport.REPORTGROUP_EN}}" data-parent="#faq-list-1" data-toggle="collapse" class="accordion-toggle collapsed">
+                            <i class="ace-icon fa fa-chevron-left pull-right" data-icon-hide="ace-icon fa fa-chevron-down" data-icon-show="ace-icon fa fa-chevron-left"></i>
+
+                            <i class="ace-icon fa fa-sort-amount-desc"></i>
+                            &nbsp; {{groupreport.REPORTGROUP_EN}}
+                        </a>
+                    </div>
+
+                    <div class="panel-collapse collapse" id="{{groupreport.REPORTGROUP_EN}}">
+                        <div class="panel-body">
+                            <div id="faq-list-nested-1" class="panel-group accordion-style1 accordion-style2">
+                                <div class="panel panel-default">
+                                    
+                                    <div class="panel-heading" ng-repeat="report in reports | filter: { REPORTGROUP_EN : groupreport.REPORTGROUP_EN }">
+                                        <a class="accordion-toggle collapsed" ng-click="setReport(report.REPORTID, report.EXCEL, report.REPORTNAME_EN, report.REPORTFILEPATH, report.REPORTNAME_EN, report.CRITERIA)">
+                                            <i class="ace-icon fa fa-plus smaller-80 middle" data-icon-hide="ace-icon fa fa-minus" data-icon-show="ace-icon fa fa-plus"></i>&nbsp;
+                                            <label style="cursor: pointer"> {{report.REPORTNAME_EN}} </label>
+                                        </a>
+                                    </div>
+                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>         
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content no-border padding-24 col-xs-12 col-sm-8">
+        <div id="faq-tab-1" class="tab-pane fade in active">
+            <h4 class="blue">
+                <i class="ace-icon fa fa-filter bigger-110"></i>
+                ตัวกรองค้นหา
+            </h4>
+
+            <div class="space-8"></div>
+
+            <div>
+                <div class="widget-box">
+                    <div class="widget-header">
+                        <h4 class="widget-title" id="reportHeader">รายงานสรุป </h4>
+
+                        <span class="widget-toolbar">
+                            <a href="#" data-action="collapse">
+                                <i class="ace-icon fa fa-chevron-up"></i>
+                            </a>
+                        </span>
+                    </div>
+
+                    <div class="widget-body">
+                        <div class="widget-main">
+
+                            <form class="form-horizontal" role="form">
+                                <div class="space-12"></div>
+                                <input type="hidden" id="reportID" />
+                                <input type="hidden" id="excel" />
+                                <input type="hidden" id="report_EN" />
+                                <input type="hidden" id="reportName" />
+                                <input type="hidden" id="criteria" ng-model="criteria" />
+                                <!--รหัสสาขา-->
+                                <div class="form-group" ng-show="criteriaSearch('storecode')">
+                                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">รหัสสาขา </label>
+
+                                    <div class="col-sm-9">
+                                        <select class="chosen-select form-control" id="storecode">
+                                            <option value="">ทั้งหมด</option>
+                                            <option value="{{store.STORECODE}}" ng-repeat="store in stores">{{store.STORECODE}} - {{store.STORENAME_TH}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!--ประเภทสัญญา-->
+                                <div class="form-group" ng-show="criteriaSearch('agreementtype')">
+                                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">ประเภทสัญญา </label>
+
+                                    <div class="col-sm-9">
+                                        <select class="chosen-select form-control" id="agreementtype">
+                                            <option value="">ทั้งหมด</option>
+                                            <option value="{{agreementtype.PROPERTYID}}" ng-repeat="agreementtype in agreementtypes">{{agreementtype.PROPERTYDESC_TH}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!--ประเภทใบอนุญาต-->
+                                <div class="form-group" ng-show="criteriaSearch('licenseType')">
+                                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">ประเภทใบอนุญาต </label>
+
+                                    <div class="col-sm-9">
+                                        <select class="chosen-select form-control" id="licenseType">
+                                            <option value="">ทั้งหมด</option>
+                                            <option value="{{licenseType.PROPERTYID}}" ng-repeat="licenseType in licenseTypes">{{licenseType.PROPERTYDESC_TH}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!--ประเภทการเช่า-->
+                                <div class="form-group" ng-show="criteriaSearch('spaceType')">
+                                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">ประเภทการเช่า </label>
+
+                                    <div class="col-sm-9">
+                                        <select class="chosen-select form-control" id="spaceType">
+                                            <option value="">ทั้งหมด</option>
+                                            <option value="{{spaceType.PROPERTYID}}" ng-repeat="spaceType in spaceTypes">{{spaceType.PROPERTYDESC_TH}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!--ชื่อผู้ให้เช่า-->
+                                <div class="form-group" ng-show="criteriaSearch('lessorName')">
+                                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">ชื่อผู้ให้เช่า </label>
+
+                                    <div class="col-sm-9">
+                                        <select class="chosen-select form-control" id="lessorName">
+                                            <option value="">ทั้งหมด</option>
+                                            <option value="{{lessorName.PROPERTYID}}" ng-repeat="lessorName in lessorNames">{{lessorName.PROPERTYDESC_TH}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!--ประเภทสินทรัพย์-->
+                                <div class="form-group" ng-show="criteriaSearch('vehicleType')">
+                                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">ประเภทสินทรัพย์ </label>
+
+                                    <div class="col-sm-9">
+                                        <select class="chosen-select form-control" id="vehicleType">
+                                            <option value="">ทั้งหมด</option>
+                                            <option value="{{vehicleType.PROPERTYID}}" ng-repeat="vehicleType in vehicleTypes">{{vehicleType.PROPERTYDESC_TH}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!--แผนก-->
+                                <div class="form-group" ng-show="criteriaSearch('department')">
+                                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">แผนก </label>
+
+                                    <div class="col-sm-9">
+                                        <select class="chosen-select form-control" id="department">
+                                            <option value="">ทั้งหมด</option>
+                                            <option value="{{department.PROPERTYID}}" ng-repeat="department in departments">{{department.PROPERTYDESC_TH}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!--สถานะ-->
+                                <div class="form-group" ng-show="criteriaSearch('status')">
+                                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">สถานะ </label>
+
+                                    <div class="col-sm-9">
+                                        <select class="chosen-select form-control" id="status">
+                                            <option value="">ทั้งหมด</option>
+                                            <option value="1">อนุมัติ</option>
+                                            <option value="0">ยกเลิก</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!--ช่วงระยะเวลา-->
+                                <div class="form-group" ng-show="criteriaSearch('startDate,endDate')">
+                                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">ช่วงระยะเวลา </label>
+
+                                    <div class="col-sm-9">
+                                        <div class="input-daterange input-group">
+                                            <input class="input-sm form-control date-picker" id="startDate" type="text" name="start" data-date-format="dd/mm/yyyy" />
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-exchange"></i>
+                                            </span>
+
+                                            <input class="input-sm form-control date-picker" id="endDate" type="text" name="end" data-date-format="dd/mm/yyyy" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.span -->
+            <div class="row">
+                <div class="col-sm-9">
+                    <div class="radio">
+                        <label>เลือกประเภทรายงาน </label>
+                        <label>
+                            <input name="REPORT" type="radio" value="excel" class="ace" id="REPORTYPE" />
+                            <span class="lbl"> Excel <i class="fa fa-file-excel-o bigger-125 green"></i></span>
+                        </label>
+                        <label>
+                            <input name="REPORT" type="radio" value="pdf" class="ace" checked="checked" />
+                            <span class="lbl"> PDF <i class="fa fa-file-pdf-o bigger-125 red"></i></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <button class="btn btn-info pull-right" type="button" ng-disabled="!criteriaSearch('submit')" ng-click="report()">
+                        <i class="ace-icon fa fa-file-text-o bigger-110"></i>
+                        ออกรายงาน
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,777 @@
+﻿@using Resources
+
+@{
+    ViewBag.Title = "REQ_100";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+
+    /* blue border on dydnamic data */
+    .data-dynamic {
+        border: 2px solid #6fb3e0;
+        border-radius: 15px;
+        padding-top: 5px;
+        /*padding-bottom: 10px;*/
+    }
+
+    /* width on tags data */
+    .tags {
+        width: 41.66%;
+    }
+
+    /* progress bar */
+    .progress-wrp {
+        border: 1px solid #0099CC;
+        padding: 1px;
+        position: relative;
+        height: 30px;
+        border-radius: 3px;
+        /*margin: 10px;*/
+        text-align: left;
+        background: #fff;
+        box-shadow: inset 1px 3px 6px rgba(0, 0, 0, 0.12);
+    }
+
+        .progress-wrp .progress-bar {
+            height: 100%;
+            border-radius: 3px;
+            background-color: #f7c01b;
+            width: 0;
+            box-shadow: inset 1px 1px 10px rgba(0, 0, 0, 0.11);
+        }
+
+        .progress-wrp .status {
+            top: 3px;
+            left: 50%;
+            position: absolute;
+            display: inline-block;
+            color: #000000;
+        }
+
+</style>
+
+<div class="row" ng-controller="REQ_100_Ctrl" id="content">
+    <h2>{{document.DOCRUNNO}}</h2>
+
+    <form class="form-horizontal" role="form">
+        <div class="space-12"></div>
+
+        <!--รหัสสาขา-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">รหัสสาขา <span class="red">*</span></label>
+
+            <div class="col-sm-9">
+                <select class="chosen-select form-control" ng-model="req.STORECODE" id="STORECODE">
+                    <option value="">โปรดเลือก</option>
+                    <option value="{{store.STORECODE}}" ng-repeat="store in stores">{{store.STORECODE}} - {{store.STORENAME_TH}}</option>
+                </select>
+            </div>
+        </div>
+
+        <!--ประเภทสัญญา-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">ประเภทสัญญา <span class="red">*</span></label>
+
+            <div class="col-sm-9">
+                <select class="chosen-select form-control" ng-model="doc.AGREEMENTTYPEID" id="AGREEMENTTYPEID">
+                    <option value="">โปรดเลือก</option>
+                    <option value="{{agreementtype.PROPERTYID}}" ng-repeat="agreementtype in agreementtypes">{{agreementtype.PROPERTYDESC_TH}}</option>
+                </select>
+            </div>
+        </div>
+
+        <!--รายละเอียดผู้ให้เช่า-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">รายละเอียดผู้ให้เช่า <span class="red">*</span></label>
+
+            <div class="col-sm-1">
+                <button class="btn btn-info" ng-click="addLessor()"><i class="ace-icon fa fa-plus"></i>เพิ่มผู้ให้เช่า </button>
+            </div>
+        </div>
+
+        <!--ผู้ให้เช่า-->
+        <div class="form-group " ng-repeat="lessor in lessors">
+            <div class="col-sm-10 col-sm-offset-1 data-dynamic">
+                <div class="col-sm-12">
+                    <i>{{$index + 1}}</i>
+                    <a href="#" ng-hide="{{$first}}" class="tooltip-error pull-right" data-rel="tooltip" title="@Resource.delete" ng-click="deleteLessor(lessor)">
+                        <span class="red">
+                            <i class="ace-icon fa fa-remove bigger-120"></i>
+                        </span>
+                    </a>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">รหัสผู้ให้เช่า </label>
+
+                    <div class="col-sm-9">
+                        <input id="code{{lessor}}" maxlength="15" type="text" class="col-xs-10 col-sm-5" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">เลขที่ประจำตัวผู้เสียภาษี </label>
+
+                    <div class="col-sm-9">
+                        <input id="tax{{lessor}}" maxlength="13" type="text" class="col-xs-10 col-sm-5" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">ชื่อผู้ให้เช่า </label>
+
+                    <div class="col-sm-9">
+                        <input id="name{{lessor}}" type="text" maxlength="80" class="col-xs-10 col-sm-5" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">ที่อยู่ตามบัตรประชาชน/ที่อยู่ตามหนังสือรับรอง </label>
+
+                    <div class="col-sm-9">
+                        <div class="col-xs-10 col-sm-5 no-padding">
+                            <textarea class="form-control limited " maxlength="300" id="address{{lessor}}"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">ที่อยู่ที่ติดต่อได้ </label>
+
+                    <div class="col-sm-9">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 ">
+                                <input class="ace ace-checkbox-2" type="checkbox" id="contactFlag{{lessor}}" onchange="angular.element(this).scope().setContactFlag(this.id, this.checked)" />
+                                <span class="lbl">กรุณาเลือกสำหรับใช้ที่อยู่ตามบัตรประชาชน/ที่อยู่ตามหนังสือรับรอง </span>
+                            </div>
+                        </div>
+                        <div class="col-xs-10 col-sm-5 no-padding" style="padding-top: 0.5em">
+                            <textarea class="form-control limited " id="contact{{lessor}}" maxlength="300"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">เบอร์โทรศัพท์ </label>
+
+                    <div class="col-sm-9">
+                        <input id="tel{{lessor}}" maxlength="15" type="text" class="col-xs-10 col-sm-5" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">ลักษณะผู้ให้เช่า <span class="red">*</span></label>
+
+                    <div class="col-sm-9">
+                        <select class="chosen-select form-control" id="type{{lessor}}" name="{{lessor}}" onchange="angular.element(this).scope().setDisabledLessor(this.name, this.value)">
+                            <option value="">โปรดเลือก</option>
+                            <option value="{{lessortype.PROPERTYID}}" ng-repeat="lessortype in lessortypes">{{lessortype.PROPERTYDESC_TH}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" id="view{{lessor}}" style="display:none">
+                    <label class="col-sm-3 control-label no-padding-right">โปรดระบุ <span class="red">*</span></label>
+                    <div class="col-sm-9">
+                        <input id="other{{lessor}}" maxlength="80" type="text" class="col-xs-10 col-sm-5" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right"></label>
+
+                    <div class="col-sm-9">
+                        <div class="radio">
+                            <label>
+                                <input name="corporate{{lessor}}" type="radio" value="{{lessor}},false" class="ace" id="corporatetax{{lessor}}" @*onchange="angular.element(this).scope().setTax(this.value)"*@ />
+                                <span class="lbl"> บริษัท</span>
+                            </label>
+                            <label>
+                                <input name="corporate{{lessor}}" type="radio" value="{{lessor}},true" class="ace" @*onchange="angular.element(this).scope().setTax(this.value)"*@ />
+                                <span class="lbl"> ห้างหุ้นส่วนจำกัด</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!--เลขที่สัญญา-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">เลขที่สัญญา </label>
+            <div class="col-sm-9">
+                <input ng-model="doc.AGREEMENTNO" type="text" maxlength="80" class="col-xs-10 col-sm-5" />
+            </div>
+        </div>
+
+        <!--ชื่อเจ้าของโฉนด-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">ชื่อเจ้าของโฉนด <span class="red">*</span></label>
+            <div class="col-sm-9">
+                <input type="text" id="DEEDOWNER" class="col-xs-10 col-sm-5 form-field-tags" placeholder="" />
+
+            </div>
+        </div>
+
+        <!--วันที่ทำสัญญา-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">วันที่ทำสัญญา <span class="red">*</span></label>
+            <div class="col-sm-9">
+                <div class="input-group col-xs-10 col-sm-5">
+                    <input class="form-control date-picker-max-today" id="DOC_CREATEDATE" ng-model="req.DOC_CREATEDATE" type="text" data-date-format="dd/mm/yyyy" />
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar bigger-110"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!--วันที่เริ่มสัญญา-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">วันที่เริ่มสัญญา <span class="red">*</span></label>
+            <div class="col-sm-9">
+                <div class="input-group col-xs-10 col-sm-5">
+                    <input class="form-control date-picker-max-year" id="DOC_EFFECTIVEDATE" ng-model="req.DOC_EFFECTIVEDATE" type="text" data-date-format="dd/mm/yyyy" />
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar bigger-110"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!--วันที่สิ้นสุดสัญญา-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">วันที่สิ้นสุดสัญญา <span class="red">*</span></label>
+            <div class="col-sm-9">
+                <div class="input-group col-xs-10 col-sm-5">
+                    <input class="form-control date-picker-max-20" id="DOC_EXPIREDATE" ng-model="req.DOC_EXPIREDATE" type="text" data-date-format="dd/mm/yyyy" />
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar bigger-110"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!--จำนวนผู้รับเงิน-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">จำนวนผู้รับเงิน <span class="red">*</span></label>
+
+            <div class="col-sm-9">
+                <select class="chosen-select form-control" id="RECEIVEPERSONNUMBER" onchange="angular.element(this).scope().pushRecievePersonNumber(this.value)">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+        </div>
+
+        <!--ชื่อผู้รับเงิน-->
+        <div class="form-group" ng-repeat="person in persons">
+            <div class="col-sm-10 col-sm-offset-1 data-dynamic">
+                <i>{{$index + 1}}</i>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">ชื่อผู้รับเงิน </label>
+                    <div class="col-sm-9">
+                        <input id="name{{person}}" onkeyup="angular.element(this).scope().setPerson()" maxlength="80" type="text" class="col-xs-10 col-sm-5" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">ธนาคารที่รับเงิน </label>
+                    <div class="col-sm-9">
+                        <select class="chosen-select form-control" id="bank{{person}}">
+                            <option value="">โปรดเลือก</option>
+                            <option value="{{bank.PROPERTYID}}" ng-repeat="bank in banks">{{bank.PROPERTYDESC_TH}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">สาขา </label>
+
+                    <div class="col-sm-9">
+                        <input id="branch{{person}}" maxlength="80" type="text" class="col-xs-10 col-sm-5" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">เลขที่บัญชี </label>
+
+                    <div class="col-sm-9">
+                        <input id="book{{person}}" maxlength="15" type="text" class="col-xs-10 col-sm-5" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!--รายละเอียดอัตราค่าเช่า-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">รายละเอียดอัตราค่าเช่า <span class="red">*</span></label>
+            <div class="col-sm-6" style="padding-top:8px;">
+                <input class="ace ace-checkbox-2" type="checkbox" ng-model="doc.SERVICEATTACHMENTFLAG" />
+                <span class="lbl">กรุณาเลือก กรณีมีสัญญาบริการแนบท้าย</span>
+            </div>
+            <div class="col-sm-2 text-right" style="padding-right: 0;">
+                <button class="btn btn-info" ng-click="addRent()"><i class="ace-icon fa fa-plus"></i>เพิ่มเงื่อนไข </button>
+            </div>
+        </div>
+
+        <!--ผู้เช่า-->
+        <div class="form-group " ng-repeat="rent in rents">
+            <div class="col-sm-10 col-sm-offset-1 data-dynamic">
+
+                <div class="col-sm-12">
+                    <i>{{$index + 1}}</i>
+                    <a href="#" ng-hide="{{$first}}" class="tooltip-error pull-right" data-rel="tooltip" title="@Resource.delete" ng-click="deleteRent(rent)">
+                        <span class="red">
+                            <i class="ace-icon fa fa-remove bigger-120"></i>
+                        </span>
+                    </a>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">ปีที่ </label>
+                    <div class="col-sm-3">
+                        <div class="input-group col-xs-12 col-sm-12">
+                            <input class="form-control" id="yearstart{{rent}}" readonly="readonly" type="text" />
+                        </div>
+                    </div>
+                    <label class="col-sm-3 control-label">ถึง </label>
+                    <div class="col-sm-3">
+                        <div class="input-group col-xs-12 col-sm-12">
+                            <input class="form-control" id="yearend{{rent}}" readonly="readonly" type="text" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">ระหว่างวันที่ </label>
+                    <div class="col-sm-3">
+                        <div class="input-group col-xs-12 col-sm-12">
+                            <input class="form-control date-picker" id="startdate{{rent}}" type="text" data-date-format="dd/mm/yyyy" />
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar bigger-110"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <label class="col-sm-3 control-label no-padding-right">ถึงวันที่ </label>
+                    <div class="col-sm-3">
+                        <div class="input-group col-xs-12 col-sm-12">
+                            <input class="form-control date-picker" id="enddate{{rent}}" type="text" data-date-format="dd/mm/yyyy" />
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar bigger-110"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hr hr-16 hr-dotted"></div>
+
+                <div ng-repeat="person in persons">
+                    <div ng-hide="{{$first}}" class="hr hr-16 hr-double"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">ผู้รับเงิน </label>
+                        <label class="col-sm-9 control-label red" style="text-align:left" id="person{{rent}}{{person}}"></label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">อัตราค่าเช่า </label>
+
+                        <div class="col-sm-9">
+                            <input id="amount{{rent}}{{person}}" maxlength="80" type="text" class="col-xs-10 col-sm-5" ng-keypress="validateAmountNumber($event)" oninput="this.value=angular.element(this).scope().currencyAmountNumber(this.value)" />
+                        </div>
+                    </div>
+
+                    <div ng-hide="!doc.SERVICEATTACHMENTFLAG" class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">อัตราบริการ </label>
+
+                        <div class="col-sm-9">
+                            <input id="service{{rent}}{{person}}" ng-keypress="validateAmountNumber($event)" oninput="this.value=angular.element(this).scope().currencyAmountNumber(this.value)" onkeyup="angular.element(this).scope().setTaxCal(this.id, this)" type="text" class="col-xs-10 col-sm-5" />
+                            &nbsp;<input class="ace ace-checkbox-2" type="checkbox" id="taxcal{{rent}}{{person}}" onchange="angular.element(this).scope().setIncludeTax(this.id, this.checked)" />
+                            <span class="lbl">  คำนวณภาษีมูลค่าเพิ่ม</span>
+                        </div>
+                    </div>
+
+                    <div ng-hide="!doc.SERVICEATTACHMENTFLAG" class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right"></label>
+
+                        <div class="col-sm-9">
+                            <div class="radio">
+                                <label>
+                                    <input name="{{rent}}{{person}}" type="radio" value="{{rent}}{{person}},false" class="ace" id="taxtrue{{rent}}{{person}}" onchange="angular.element(this).scope().setTax(this.value)" />
+                                    <span class="lbl"> ไม่รวมภาษีมูลค่าเพิ่ม</span>
+                                </label>
+                                <label>
+                                    <input name="{{rent}}{{person}}" type="radio" value="{{rent}}{{person}},true" class="ace" onchange="angular.element(this).scope().setTax(this.value)" />
+                                    <span class="lbl"> รวมภาษีมูลค่าเพิ่ม</span>
+                                </label>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div ng-hide="!doc.SERVICEATTACHMENTFLAG" class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">รวมภาษีมูลค่าเพิ่ม </label>
+
+                        <div class="col-sm-9">
+                            <input readonly="" id="tax{{rent}}{{person}}" type="text" class="col-xs-10 col-sm-5" />
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!--ผู้รับภาระภาษีโรงเรือน และที่ดิน-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">ผู้รับภาระภาษีโรงเรือน และที่ดิน <span class="red">*</span></label>
+
+            <div class="col-sm-9">
+                <select class="chosen-select form-control" id="HOUSEANDLANDTAX">
+                    <option value="">โปรดเลือก</option>
+                    <option value="{{houselandtax.PROPERTYID}}" ng-repeat="houselandtax in houselandtaxs">{{houselandtax.PROPERTYDESC_TH}}</option>
+                </select>
+            </div>
+        </div>
+
+        <!--รายละเอียดการวางเงินประกัน-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">รายละเอียดการวางเงินประกัน <span class="red">*</span></label>
+
+            <div class="col-sm-9">
+                <div class="radio">
+                    <label>
+                        <input name="DEPOSITFLAG" type="radio" value="false" class="ace" id="DEPOSITFLAG" onchange="angular.element(this).scope().setDepositFlag(this.value)" />
+                        <span class="lbl"> ไม่ได้วางเงินประกัน</span>
+                    </label>
+                    <label>
+                        <input name="DEPOSITFLAG" type="radio" value="true" class="ace" onchange="angular.element(this).scope().setDepositFlag(this.value)" />
+                        <span class="lbl"> วางเงินประกัน</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!--จำนวนเงินประกัน-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">จำนวนเงินประกัน </label>
+
+            <div class="col-sm-9">
+                <input id="DEPOSITAMOUNT" ng-model="doc.DEPOSITAMOUNT" type="text" maxlength="24" class="col-xs-10 col-sm-5" ng-keypress="validateAmountNumber($event)" oninput="this.value=angular.element(this).scope().currencyAmountNumber(this.value)" />
+            </div>
+        </div>
+
+        <!--หมายเหตุ-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">หมายเหตุ </label>
+
+            <div class="col-sm-9">
+                <div class="col-xs-10 col-sm-5 no-padding">
+                    <textarea class="form-control limited " maxlength="300" id="DEPOSITREMARKS" ng-model="doc.DEPOSITREMARKS"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!--ชำระค่าเช่า งวดละ-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">ชำระค่าเช่า งวดละ <span class="red">*</span></label>
+
+            <div class="col-sm-9">
+                <select class="chosen-select form-control" id="PAYMENTOUTTERM">
+                    <option value="{{paymentoutterm.PROPERTYID}}" ng-repeat="paymentoutterm in paymentoutterms">{{paymentoutterm.PROPERTYDESC_TH}}</option>
+                </select>
+            </div>
+        </div>
+
+        <!--กำหนดชำระงวดแรก-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">กำหนดชำระงวดแรก @*<span class="red">*</span>*@</label>
+            <div class="col-sm-9">
+                <div class="input-group col-xs-10 col-sm-5">
+                    <input class="form-control date-picker-max-year" ng-model="doc.FIRSTPAYMENTOUTDATE" id="FIRSTPAYMENTOUTDATE" type="text" data-date-format="dd/mm/yyyy" />
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar bigger-110"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!--กำหนดชำระค่าเช่าแต่ละเดือนภายในวันที่-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">กำหนดชำระค่าเช่าแต่ละเดือนภายในวันที่ <span class="red">*</span></label>
+
+            <div class="col-sm-9">
+                <select class="chosen-select form-control" id="PAYMENTOUTWITHINDATE">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    <option value="25">25</option>
+                    <option value="26">26</option>
+                    <option value="27">27</option>
+                    <option value="28">28</option>
+                    <option value="29">29</option>
+                    <option value="30">30</option>
+                </select>
+            </div>
+        </div>
+
+        <!--การคำนวณภาษีอัตราค่าเช่า-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">การคำนวณภาษีอัตราค่าเช่า <span class="red">*</span></label>
+
+            <div class="col-sm-9">
+                <select class="chosen-select form-control" ng-model="doc.LANDLEASETAXTYPEID" id="LANDLEASETAXTYPEID">
+                    <option value="">โปรดเลือก</option>
+                    <option value="{{taxtype.TAXTYPEID}}" ng-repeat="taxtype in taxtypes | filter: {TAXTYPE:'LEASING'}">{{taxtype.TAXDESC_TH}}</option>
+                </select>
+            </div>
+        </div>
+
+        <!--การคำนวณภาษีค่าบริการ-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">การคำนวณภาษีค่าบริการ <span class="red">*</span></label>
+
+            <div class="col-sm-9">
+                <select class="chosen-select form-control" id="SERVICETAXTYPEID" ng-model="doc.SERVICETAXTYPEID" ng-disabled="setDisabledService(!doc.SERVICEATTACHMENTFLAG)">
+                    <option value="">โปรดเลือก</option>
+                    <option value="{{taxtype.TAXTYPEID}}" ng-repeat="taxtype in taxtypes | filter: {TAXTYPE:'SERVICE'}">{{taxtype.TAXDESC_TH}}</option>
+                </select>
+            </div>
+        </div>
+
+        <!--การชำระค่าเช่าล่วงหน้า-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">การชำระค่าเช่าล่วงหน้า </label>
+            <div class="col-sm-9" style="padding-top:8px;">
+                <input class="ace ace-checkbox-2" type="checkbox" ng-model="doc.FUTUREPAYMENTOUTFLAG" ng-change="setDisable()" />
+                <span class="lbl">กรุณาเลือก กรณีมีการชำระค่าเช่าล่วงหน้า</span>
+            </div>
+        </div>
+
+        <!--จำนวนงวดค่าเช่าที่ชำระล่วงหน้า (งวด)-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">จำนวนงวดค่าเช่าที่ชำระล่วงหน้า (งวด) </label>
+
+            <div class="col-sm-9">
+                <div class="input-group col-xs-10 col-sm-5">
+                    <input class="form-control" id="FUTUREPAYMENTOUTTERM" type="number" />
+                </div>
+            </div>
+        </div>
+
+        <!--จ่ายค่าเช่าล่วงหน้าตั้งแต่วันที่-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">จ่ายค่าเช่าล่วงหน้าตั้งแต่วันที่</label>
+            <div class="col-sm-9">
+                <div class="input-group col-xs-10 col-sm-5">
+                    <input class="form-control date-picker-max-year" id="FUTUREPAYMENTOUTSTARTDATE" onchange="angular.element(this).scope().setDateFutureEnd(this.value)" ng-model="doc.FUTUREPAYMENTOUTSTARTDATE" type="text" data-date-format="dd/mm/yyyy" />
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar bigger-110"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!--ถึงวันที่-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">ถึงวันที่</label>
+            <div class="col-sm-9">
+                <div class="input-group col-xs-10 col-sm-5">
+                    <input class="form-control date-picker" id="FUTUREPAYMENTOUTENDDATE" ng-model="doc.FUTUREPAYMENTOUTENDDATE" type="text" data-date-format="dd/mm/yyyy" />
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar bigger-110"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!--การชำระค่าบริการล่วงหน้า-->
+        <div class="form-group" ng-hide="!doc.SERVICEATTACHMENTFLAG">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">การชำระค่าบริการล่วงหน้า </label>
+            <div class="col-sm-9" style="padding-top:8px;">
+                <input class="ace ace-checkbox-2" type="checkbox" ng-model="doc.FUTURESERVICEPAYMENTOUTFLAG" ng-change="setDisableServicePayment()" />
+                <span class="lbl">กรุณาเลือก กรณีมีการชำระค่าบริการล่วงหน้า</span>
+            </div>
+        </div>
+
+        <!--จำนวนงวดค่าบริการที่ชำระล่วงหน้า (งวด)-->
+        <div class="form-group" ng-hide="!doc.SERVICEATTACHMENTFLAG">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">จำนวนงวดค่าบริการที่ชำระล่วงหน้า (งวด) </label>
+
+            <div class="col-sm-9">
+                <div class="input-group col-xs-10 col-sm-5">
+                    <input class="form-control" id="FUTURESERVICEPAYMENTOUTTERM" type="number" />
+                </div>
+            </div>
+        </div>
+
+        <!--จ่ายค่าบริการล่วงหน้าตั้งแต่วันที่-->
+        <div class="form-group" ng-hide="!doc.SERVICEATTACHMENTFLAG">
+            <label class="col-sm-3 control-label no-padding-right">จ่ายค่าบริการล่วงหน้าตั้งแต่วันที่</label>
+            <div class="col-sm-9">
+                <div class="input-group col-xs-10 col-sm-5">
+                    <input class="form-control date-picker-max-year" id="FUTURESERVICEPAYMENTOUTSTARTDATE" onchange="angular.element(this).scope().setDateFutureEnd(this.value)" ng-model="doc.FUTURESERVICEPAYMENTOUTSTARTDATE" type="text" data-date-format="dd/mm/yyyy" />
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar bigger-110"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!--ถึงวันที่-->
+        <div class="form-group" ng-hide="!doc.SERVICEATTACHMENTFLAG">
+            <label class="col-sm-3 control-label no-padding-right">ถึงวันที่</label>
+            <div class="col-sm-9">
+                <div class="input-group col-xs-10 col-sm-5">
+                    <input class="form-control date-picker" id="FUTURESERVICEPAYMENTOUTENDDATE" ng-model="doc.FUTURESERVICEPAYMENTOUTENDDATE" type="text" data-date-format="dd/mm/yyyy" />
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar bigger-110"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!--หากยกเลิกสัญญา ต้องแจ้งล่วงหน้า (วัน)-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">หากยกเลิกสัญญา ต้องแจ้งล่วงหน้า (วัน) <span class="red">*</span></label>
+
+            <div class="col-sm-9">
+                <div class="input-group col-xs-10 col-sm-5">
+                    <input class="form-control" ng-model="doc.CANCELINFODATE" type="number" />
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">แนบเอกสาร (รูปภาพ, pdf) <span class="red">*</span></label>
+        </div>
+
+        <!--File หนังสือสัญญาเช่า-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">หนังสือสัญญาเช่า </label>
+
+            <div class="col-sm-3">
+                <input type="file" id="landleaseFile" class="file_input" />
+            </div>
+            <div class="col-sm-3">
+            </div>
+            <div id="landleaseFileprogress" class="progress-wrp col-sm-3" style="display:none">
+                <div class="progress-bar"></div>
+                <div class="status">0%</div>
+            </div>
+        </div>
+
+        <!--File หนังสือสัญญาบริการ-->
+        <div class="form-group">
+
+            <label class="col-sm-3 control-label no-padding-right">หนังสือสัญญาบริการ </label>
+
+            <div class="col-sm-3">
+                <input type="file" id="serviceFile" class="file_input" />
+            </div>
+            <div class="col-sm-3">
+            </div>
+            <div id="serviceFileprogress" class="progress-wrp col-sm-3" style="display:none">
+                <div class="progress-bar"></div>
+                <div class="status">0%</div>
+            </div>
+        </div>
+
+        <!--File หลักฐานประกอบการทำสัญญา-->
+        <div class="form-group">
+
+            <label class="col-sm-3 control-label no-padding-right">หลักฐานประกอบการทำสัญญา </label>
+
+            <div class="col-sm-3">
+                <input type="file" id="evidenceFile" class="file_input" />
+            </div>
+            <div class="col-sm-3">
+            </div>
+            <div id="evidenceFileprogress" class="progress-wrp col-sm-3" style="display:none">
+                <div class="progress-bar"></div>
+                <div class="status">0%</div>
+            </div>
+        </div>
+
+        <!--File อื่นๆ (ถ้ามี)-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">อื่นๆ (ถ้ามี) </label>
+
+            <div class="col-sm-3">
+                <input multiple="" type="file" id="otherFile" class="file-input-multi" />
+            </div>
+            <div class="col-sm-3">
+            </div>
+            <div id="otherFileprogress" class="progress-wrp col-sm-3" style="display:none">
+                <div class="progress-bar"></div>
+                <div class="status">0%</div>
+            </div>
+        </div>
+
+        <!--ตั้งค่าการแจ้งเตือนล่วงหน้า-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">ตั้งค่าการแจ้งเตือนล่วงหน้า <span class="red">*</span></label>
+            <div class="col-sm-1">
+                <div class="input-group col-sm-12">
+                    <input class="form-control" maxlength="2" ng-model="req.NOTICENUMBER_EXPIRE" type="text" only-digits />
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <select class="chosen-select form-control" ng-model="req.NOTICEUNIT_EXPIRE">
+                    <option value="">โปรดเลือก</option>
+                    <option value="DAY">วัน</option>
+                    <option value="MONTH">เดือน</option>
+                    <option value="YEAR">ปี</option>
+                </select>
+            </div>
+        </div>
+
+    </form>
+
+    <div class="">
+        <button class="btn btn-info" type="button" ng-click="saveDraft(req, doc)">
+            <i class="ace-icon fa fa-check bigger-110"></i>
+            บันทึกฉบับร่าง
+        </button>
+        <button class="btn btn-info pull-right" type="button" ng-click="submitDocument(req, doc)">
+            <i class="ace-icon fa fa-check bigger-110"></i>
+            ส่งคำร้อง
+        </button>
+    </div>
+
+</div>

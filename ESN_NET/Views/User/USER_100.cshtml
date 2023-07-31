@@ -1,0 +1,346 @@
+﻿@using Resources
+
+@{
+    ViewBag.Title = "USER_100";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .popover_parent {
+        position: relative;
+        display: inline-block;
+    }
+
+    .popover {
+        display: none;
+        background: #fff;
+        padding: 1em;
+        border-radius: 4px;
+        position: fixed;
+        /*left: 200px;
+        top: 3em;*/
+        z-index: 1;
+        width: 650px;
+        top: 10%;
+        left: 50%;
+        border: 2px solid rgba(255, 158, 0, 1);
+        max-width: 800px;
+        margin: 5% auto; /* Will not center vertically and won't work in IE6/7. */
+        left: 0;
+        right: 0;
+    }
+
+    /*.popover:before {
+            content: "";
+            position: absolute;
+            left: 203px;
+            top: -20px;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-bottom: 10px solid rgba(255, 158, 0, 1);
+        }*/
+
+    .active .popover {
+        display: block;
+    }
+
+    .active a {
+        background: #47E0A4 !important;
+    }
+</style>
+
+<div ng-controller="USER_100_Ctrl" id="content">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12">
+            <div class="widget-box widget-color-blue">
+                <div class="widget-header">
+                    <h4 class="widget-title">@Resource.filterUser</h4>
+
+                    <button class="btn btn-xs btn-warning bigger pull-right" style="margin-top: 4px; margin-right: 4px;" ng-click="getUserByProperty(search)">
+                        <i class="ace-icon fa fa-search"></i>
+                        @Resource.search
+                    </button>
+
+                    <div class="widget-toolbar pull-right">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div>
+                                    <label>@Resource.username</label>
+                                    <input type="text" placeholder="User Name" class="col-xs-12 col-sm-12" ng-model="search.USERNAME" ng-enter="getUserByProperty(search)" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label>@Resource.Name</label>
+                                <input type="text" placeholder="Name" class="col-xs-12 col-sm-12" ng-model="search.NAME_EN" ng-enter="getUserByProperty(search)" />
+                            </div>
+                            <div class="col-sm-3">
+                                <div>
+                                    <label>@Resource.Surname</label>
+                                    <input type="text" placeholder="Surname" class="col-xs-12 col-sm-12" ng-model="search.LASTNAME_EN" ng-enter="getUserByProperty(search)" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div>
+                                    <label>@Resource.email</label>
+                                    <input type="text" placeholder="Email" class="col-xs-12 col-sm-12" ng-model="search.USEREMAIL" ng-enter="getUserByProperty(search)" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="row" style="margin-top: -15px">
+                            <div class="col-sm-3">
+                                <div>
+                                    <label>@Resource.userClass</label>
+                                    <select class="chosen-select form-control" id="searchUserClass" onchange="angular.element(this).scope().getUserByProperty()">
+                                        <option value="-1">@Resource.all</option>
+                                        <option ng-repeat="class in classs" value="{{class.USERCLASS}}">{{class.USERCLASSTEXT}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-3" ng-repeat="topic in topics">
+                                <div>
+                                    <label>{{topic.PROPERTYTYPE}}</label>
+                                    <select class="chosen-select form-control" id="search{{topic.PROPERTY}}" onchange="angular.element(this).scope().getUserByProperty()">
+                                        <option value="">@Resource.all</option>
+                                        <option ng-repeat="subproperty in properties | filter: { PROPERTY: topic.PROPERTY }"
+                                            value='{ "TOPIC" : {{topic.PROPERTY}}, "PROPERTY" : {{subproperty.PROPERTYID}} }'>
+                                            <text ng-show="showProperty('@Session["Culture"]','en'">{{subproperty.PROPERTYNAME}} - {{subproperty.PROPERTYDESC_EN}}</text>
+                                            <text ng-show="showProperty('@Session["Culture"]','th'">{{subproperty.PROPERTYNAME}} - {{subproperty.PROPERTYDESC_TH}}</text>
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <br />
+    <br />
+
+    <div class="table-header">
+        @Resource.resultUser
+    </div>
+
+    <div>
+        <table id="dynamic-table" class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>@Resource.username</th>
+                    <th>@Resource.nameEN</th>
+                    <th>@Resource.surnameEN</th>
+                    <th>@Resource.nameTH</th>
+                    <th>@Resource.surnameTH</th>
+                    <th>@Resource.email</th>
+                    <th>@Resource.userClass</th>
+                    <th style="width: 10px" ng-hide="topics == 0"></th>
+                    <th style="width: 10px"></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr ng-repeat="user in users">
+                    <td ng-class="{'red': user.USERSTATUS != '0'}">{{user.USERNAME}}</td>
+                    <td ng-class="{'red': user.USERSTATUS != '0'}">{{user.NAME_EN}}</td>
+                    <td ng-class="{'red': user.USERSTATUS != '0'}">{{user.LASTNAME_EN}}</td>
+                    <td ng-class="{'red': user.USERSTATUS != '0'}">{{user.NAME_TH}}</td>
+                    <td ng-class="{'red': user.USERSTATUS != '0'}">{{user.LASTNAME_TH}}</td>
+                    <td ng-class="{'red': user.USERSTATUS != '0'}">{{user.USEREMAIL}}</td>
+                    <td ng-class="{'red': user.USERSTATUS != '0'}">{{user.USERCLASSTEXT}}</td>
+                    <td ng-hide="topics == 0">
+                        <div class="popover_parent">
+                            <a href="javascript:void(0)" class="help-button" ng-click="getUserPropertyByUser($event, user)">?</a>
+                            <div class="popover search" style="overflow:auto; height:auto; max-height:500px;">
+                                <h5 style="font-weight: bold;">@Resource.username : {{user.USERNAME}}</h5>
+                                <table style="width: 100%;" class="table table-striped table-bordered table-hover">
+
+                                    <tr>
+                                        <th style="text-align: center">@Resource.no</th>
+                                        <th style="width: 30%; text-align: center">@Resource.propertyname</th>
+                                        <th style="width: 30%; text-align: center">@Resource.property_code</th>
+                                        <th style="width: 30%; text-align: center">@Resource.description</th>
+                                    </tr>
+
+                                    <tr ng-repeat="userproperty in userproperties">
+                                        <td class="center"> {{$index + 1}}. </td>
+                                        <td> {{userproperty.PROPERTYTYPE}}</td>
+                                        <td> {{userproperty.PROPERTYNAME}}</td>
+                                        <td ng-show="showProperty('@Session["Culture"]','en')"> {{userproperty.PROPERTYDESC_EN}}</td>
+                                        <td ng-show="showProperty('@Session["Culture"]','th')"> {{userproperty.PROPERTYDESC_TH}}</td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="center">
+                        <div class="inline pos-rel">
+                            <button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown" data-position="auto">
+                                <i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+                            </button>
+
+                            <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+                                <li>
+                                    <a href="#modal-table" data-toggle="modal" class="tooltip-info" title="@Resource.edit" ng-click="modalUser(user)">
+                                        <span class="green">
+                                            <i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
+                                        </span>
+                                    </a>
+                                </li>
+
+                                <li ng-show="user.USERSTATUS == 0">
+                                    <a data-toggle="modal" class="tooltip-error" title="@Resource.inactive" ng-click="inactiveUser(user)">
+                                        <span class="red">
+                                            <i class="ace-icon fa fa-user bigger-120"></i>
+                                        </span>
+                                    </a>
+                                </li>
+
+
+                                <li ng-show="user.USERSTATUS != 0">
+                                    <a data-toggle="modal" class="tooltip-error" title="@Resource.active" ng-click="activeUser(user)">
+                                        <span class="blue">
+                                            <i class="ace-icon fa fa-user bigger-120"></i>
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="modal-table" class="modal fade" tabindex="-1">
+        <div class="modal-dialog" style="width: 60%">
+            <div class="modal-content">
+                <div class="modal-header no-padding">
+                    <div class="table-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <span class="white">&times;</span>
+                        </button>
+                        @Resource.edit
+                    </div>
+                </div>
+
+                <div class="modal-body no-padding">
+                    <form class="form-horizontal" role="form">
+                        <div class="space-12"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label no-padding-right" for="form-input-readonly">
+                                @Resource.username
+                                <span class="red"> *</span>
+                            </label>
+
+                            <div class="col-sm-7">
+                                <input ng-model="user.USERNAME" readonly type="text" class="col-xs-10 col-sm-5 disabled" maxlength="12" pattern="[A-Za-z0-9]{3,12}" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label no-padding-right" for="form-input-readonly">
+                                @Resource.nameEN
+                                <span class="red"> *</span>
+                            </label>
+
+                            <div class="col-sm-7">
+                                <input ng-model="user.NAME_EN" type="text" class="col-xs-10 col-sm-5" maxlength="50" pattern="[A-Za-z]{2,50}" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label no-padding-right" for="form-input-readonly">@Resource.nameTH </label>
+                            <div class="col-sm-7">
+                                <input ng-model="user.NAME_TH" type="text" class="col-xs-10 col-sm-5" maxlength="50" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label no-padding-right" for="form-input-readonly">
+                                @Resource.surnameEN
+                                <span class="red"> *</span>
+                            </label>
+                            <div class="col-sm-7">
+                                <input ng-model="user.LASTNAME_EN" type="text" class="col-xs-10 col-sm-5" maxlength="50" pattern="[A-Za-z]{2,50}" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label no-padding-right" for="form-input-readonly">@Resource.surnameTH </label>
+                            <div class="col-sm-7">
+                                <input ng-model="user.LASTNAME_TH" type="text" class="col-xs-10 col-sm-5" maxlength="50" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label no-padding-right" for="form-input-readonly">
+                                @Resource.email
+                                <span class="red"> *</span>
+                            </label>
+                            <div class="col-sm-7">
+                                <input ng-model="user.USEREMAIL" type="text" class="col-xs-10 col-sm-5" maxlength="80" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label no-padding-right" for="form-field-1">
+                                @Resource.userClass
+                                <span class="red"> *</span>
+                            </label>
+
+                            <div class="col-sm-3">
+                                <select class="chosen-select form-control"  id="updUserclass">
+                                    <option ng-repeat="class in classs" value="{{class.USERCLASS}}">{{class.USERCLASSTEXT}}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-repeat="topic in topics">
+                            <label class="col-sm-5 control-label no-padding-right" for="form-field-1">{{topic.PROPERTYTYPE}} </label>
+
+                            <div class="col-sm-3">
+                                <select multiple="" class="chosen-select form-control" id="{{topic.PROPERTY}}">
+                                    <option ng-repeat="subproperty in properties | filter: { PROPERTY: topic.PROPERTY }"
+                                        value='{ "TOPIC" : {{topic.PROPERTY}}, "PROPERTY" : {{subproperty.PROPERTYID}} }'>
+                                        <text ng-show="showProperty('@Session["Culture"]','en'">{{subproperty.PROPERTYNAME}} - {{subproperty.PROPERTYDESC_EN}}</text>
+                                        <text ng-show="showProperty('@Session["Culture"]','th'">{{subproperty.PROPERTYNAME}} - {{subproperty.PROPERTYDESC_TH}}</text>
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+
+                <div class="modal-footer no-margin-top">
+                    <button class="btn btn-sm btn-info pull-right" ng-click="updateUser(user)">
+                        <i class="ace-icon fa fa-times"></i>
+                        @Resource.updateUser
+                    </button>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+</div>
+

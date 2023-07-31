@@ -1,0 +1,404 @@
+﻿@using Resources
+
+@{
+    ViewBag.Title = "SYS_300";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div ng-controller="SYS_300_Ctrl" id="content">
+
+    <div class="row">
+
+        <div class="col-xs-12 col-sm-7 widget-container-col" style="margin-bottom:20px;">
+            <div class="widget-box widget-color-blue light-border">
+                <div class="widget-header">
+                    <h5 class="widget-title smaller"><i class="ace-icon fa fa-archive bigger-110"></i>@Resource.propertiesinsystem</h5>
+
+                    <div class="widget-toolbar pull-right">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="widget-body" style="min-height:378px">
+                    <div class="widget-main padding-6" style="overflow:auto; height:auto; max-height:300px; min-height:378px">
+                        <table id="simple-table" class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width:10px" class="center">@Resource.no</th>
+                                    <th class="center">@Resource.propertydesc_en</th>
+                                    <th class="center">@Resource.propertydesc_th</th>
+                                    <th class="center" style="max-width:20px">@Resource.user</th>
+                                    <th class="center" style="max-width:20px">@Resource.doc</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr ng-repeat="topic in topics track by topic.PROPERTY">
+                                    <td class="center" ng-bind-template="{{$index + 1}}."></td>
+                                    <td ng-bind="topic.PROPERTYDESC_EN"></td>
+                                    <td ng-bind="topic.PROPERTYDESC_TH"></td>
+                                    <td class="center" style="position: relative;">
+                                        <input class="ace ace-checkbox-2" style="margin-top: 0" type="checkbox" ng-checked="topic.PROPERTY_USER == 0" ng-model="ckUser" ng-click="setUserProperty(topic.PROPERTY, ckUser)" />
+                                        <span class="lbl"></span>
+                                    </td>
+                                    <td class="center" style="position: relative;">
+                                        <input class="ace ace-checkbox-2" style="margin-top: 0" type="checkbox" ng-checked="topic.PROPERTY_DOC == 0" ng-model="ckDoc" ng-click="setDocProperty(topic.PROPERTY, ckDoc)" />
+                                        <span class="lbl"></span>
+                                    </td>
+                                    <td class="center">
+                                        <div class="inline pos-rel">
+                                            <button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown" data-position="auto">
+                                                <i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+                                            </button>
+
+                                            <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+                                                <li>
+                                                    <a href="#modal-edit-property-topic" class="tooltip-info" data-rel="tooltip" data-toggle="modal" title="@Resource.edit" ng-click="setEditPropertyTopicName('@Session["Culture"]', topic)">
+                                                        <span class="green">
+                                                            <i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
+                                                        </span>
+                                                    </a>
+                                                </li>
+
+                                                <li>
+                                                    <a href="#" class="tooltip-error" data-rel="tooltip" title="@Resource.delete" ng-click="deleteUserClass('@Session["Culture"]', userClass)">
+                                                        <span class="red">
+                                                            <i class="ace-icon fa fa-trash-o bigger-120"></i>
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <a class="btn btn-xs btn-success pull-right" href="#modal-property" data-toggle="modal" ng-click="clearCreateNewProperty()" style="width:150px;border-radius:3px;margin-top:5px;">
+                        <i class="ace-icon fa fa-plus bigger-110"></i>
+                        @Resource.add
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-5 widget-container-col" style="margin-bottom:20px">
+            <div class="widget-box widget-color-blue light-border">
+                <div class="widget-header">
+                    <h5 class="widget-title smaller"><i class="ace-icon fa fa-bar-chart bigger-110"></i>@Resource.propertiesinsystem</h5>
+
+                    <div class="widget-toolbar pull-right">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main padding-6">
+                        <!-- visit www.amcharts.com to download -->
+                        <div id="chartdiv" class="chartdiv"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-xs-12 col-sm-4" ng-repeat="topic in topics track by topic.PROPERTY">
+            <div class="widget-box transparent">
+                <div class="widget-header widget-header-flat">
+                    <h4 class="widget-title lighter">
+                        <i class="ace-icon fa fa-star orange"></i>
+                        <span ng-bind="topic.PROPERTYTYPE"></span>
+                    </h4>
+                    <div class="widget-toolbar pull-right">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main no-padding">
+                        <div style="overflow:auto; height:auto; max-height:300px; min-height:300px">
+                            <table class="table table-bordered table-striped">
+                                <thead class="thin-border-bottom">
+                                    <tr>
+                                        <th>
+                                            <i class="ace-icon fa fa-caret-right blue"></i>Name
+                                        </th>
+                                        <th>
+                                            <i class="ace-icon fa fa-caret-right blue"></i>Description (EN)
+                                        </th>
+                                        <th class="hidden-480">
+                                            <i class="ace-icon fa fa-caret-right blue"></i>Description (TH)
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr ng-repeat="property in propertys[topic.PROPERTY] track by $index">
+                                        <td>
+                                            <span class="label label-info arrowed-right arrowed-in" ng-bind="property.PROPERTYNAME">
+                                            </span>
+                                        </td>
+                                        <td ng-bind="property.PROPERTYDESC_EN"></td>
+                                        <td class="hidden-480" ng-bind="property.PROPERTYDESC_TH"></td>
+                                        <td class="center">
+                                            <div class="inline pos-rel">
+                                                <button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown" data-position="auto">
+                                                    <i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+                                                </button>
+
+                                                <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+                                                    <li>
+                                                        <a href="#modal-edit-property" class="tooltip-info" data-toggle="modal" data-rel="tooltip" title="@Resource.edit" ng-click="setEditSubProperty(property)">
+                                                            <span class="green">
+                                                                <i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
+                                                            </span>
+                                                        </a>
+                                                    </li>
+
+                                                    <li>
+                                                        <a href="#" class="tooltip-error" data-rel="tooltip" title="@Resource.delete" ng-click="deleteSubProperty(property, '@Session["Culture"]')">
+                                                            <span class="red">
+                                                                <i class="ace-icon fa fa-trash-o bigger-120"></i>
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <a class="btn btn-xs btn-success pull-right" href="#modal-add-property" data-toggle="modal" style="width:150px;border-radius:3px;margin-top:5px;" ng-click="setAddSubProperty(topic)">
+                            <i class="ace-icon fa fa-plus bigger-110"></i>
+                            @Resource.add
+                        </a>
+                    </div><!-- /.widget-main -->
+                </div><!-- /.widget-body -->
+            </div><!-- /.widget-box -->
+        </div><!-- /.col -->
+
+    </div>
+
+    <div id="modal-property" class="modal fade" tabindex="-1">
+        <div class="modal-dialog" style="width: 60%">
+            <div class="modal-content">
+                <div class="modal-header no-padding">
+                    <div class="table-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <span class="white">&times;</span>
+                        </button>
+                        @Resource.createproperty
+                    </div>
+                </div>
+
+                <div class="modal-body no-padding">
+                    <form class="form-horizontal" role="form">
+                        <div class="space-12"></div>
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label no-padding-right">@Resource.propertyname </label>
+                            <div class="col-sm-7">
+                                <input ng-model="create.PROPERTYTYPE" type="text" class="col-xs-10 col-sm-5" maxlength="50" pattern="[A-Za-z0-9]{0,50}" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label no-padding-right">@Resource.propertydesc_en </label>
+
+                            <div class="col-sm-7">
+                                <input ng-model="create.PROPERTYDESC_EN" type="text" class="col-xs-10 col-sm-5" maxlength="80" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label no-padding-right">@Resource.propertydesc_th </label>
+
+                            <div class="col-sm-7">
+                                <input ng-model="create.PROPERTYDESC_TH" type="text" class="col-xs-10 col-sm-5" maxlength="80" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer no-margin-top">
+                    <button class="btn btn-sm btn-info pull-right" data-dismiss="modal" ng-click="createNewProperty(create, '@Session["Culture"]')">
+                        <i class="ace-icon fa fa-plus"></i>
+                        Create Property
+                    </button>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div id="modal-edit-property-topic" class="modal fade" tabindex="-1">
+        <div class="modal-dialog" style="width: 60%">
+            <div class="modal-content">
+                <div class="modal-header no-padding">
+                    <div class="table-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <span class="white">&times;</span>
+                        </button>
+                        @Resource.editProperty
+                    </div>
+                </div>
+
+                <div class="modal-body no-padding">
+                    <form class="form-horizontal" role="form">
+                        <div class="space-12"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label no-padding-right">@Resource.propertydesc_en </label>
+
+                            <div class="col-sm-7">
+                                <input ng-model="edit.PROPERTY" type="hidden" class="col-xs-10 col-sm-5" maxlength="50" />
+                                <input ng-model="edit.PROPERTYDESC_EN" type="text" class="col-xs-10 col-sm-5" maxlength="80" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label no-padding-right">@Resource.propertydesc_th </label>
+
+                            <div class="col-sm-7">
+                                <input ng-model="edit.PROPERTYDESC_TH" type="text" class="col-xs-10 col-sm-5" maxlength="80" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer no-margin-top">
+                    <button class="btn btn-sm btn-info pull-right" data-dismiss="modal" ng-click="editPropertyTopicName(edit, '@Session["Culture"]')">
+                        <i class="ace-icon fa fa-save"></i>
+                        Edit Property
+                    </button>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div id="modal-add-property" class="modal fade" tabindex="-1">
+        <div class="modal-dialog" style="width: 60%">
+            <div class="modal-content">
+                <div class="modal-header no-padding">
+                    <div class="table-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <span class="white">&times;</span>
+                        </button>
+                        <span ng-bind-template="@Resource.addSubProperty - {{createSub.PROPERTYTYPE}}"></span>
+                    </div>
+                </div>
+
+                <div class="modal-body no-padding">
+                    <form class="form-horizontal" role="form">
+                        <div class="space-12"></div>
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label no-padding-right">@Resource.subPropertyName </label>
+                            <div class="col-sm-7">
+                                <input ng-model="createSub.PROPERTY" type="hidden" class="col-xs-10 col-sm-5" maxlength="50" />
+                                <input ng-model="createSub.PROPERTYNAME" type="text" class="col-xs-10 col-sm-5" maxlength="50" pattern="[A-Za-z0-9]{0,50}" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label no-padding-right">@Resource.subPropertyDesc_EN </label>
+
+                            <div class="col-sm-7">
+                                <input ng-model="createSub.PROPERTYDESC_EN" type="text" class="col-xs-10 col-sm-5" maxlength="80" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label no-padding-right">@Resource.subPropertyDesc_TH </label>
+
+                            <div class="col-sm-7">
+                                <input ng-model="createSub.PROPERTYDESC_TH" type="text" class="col-xs-10 col-sm-5" maxlength="80" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer no-margin-top">
+                    <button class="btn btn-sm btn-info pull-right" data-dismiss="modal" ng-click="addSubProperty(createSub, '@Session["Culture"]')">
+                        <i class="ace-icon fa fa-plus"></i>
+                        Create Sub Property
+                    </button>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div id="modal-edit-property" class="modal fade" tabindex="-1">
+        <div class="modal-dialog" style="width: 60%">
+            <div class="modal-content">
+                <div class="modal-header no-padding">
+                    <div class="table-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <span class="white">&times;</span>
+                        </button>
+                        @Resource.editSubProperty
+                    </div>
+                </div>
+
+                <div class="modal-body no-padding">
+                    <form class="form-horizontal" role="form">
+                        <div class="space-12"></div>
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label no-padding-right">@Resource.subPropertyName </label>
+                            <div class="col-sm-7">
+                                <input ng-model="editSub.PROPERTYNAME" type="text" class="col-xs-10 col-sm-5" maxlength="50" pattern="[A-Za-z0-9]{0,50}" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label no-padding-right">@Resource.subPropertyDesc_EN </label>
+
+                            <div class="col-sm-7">
+                                <input ng-model="editSub.PROPERTYDESC_EN" type="text" class="col-xs-10 col-sm-5" maxlength="80" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label no-padding-right">@Resource.subPropertyDesc_TH </label>
+
+                            <div class="col-sm-7">
+                                <input ng-model="editSub.PROPERTYDESC_TH" type="text" class="col-xs-10 col-sm-5" maxlength="80" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer no-margin-top">
+                    <button class="btn btn-sm btn-info pull-right" data-dismiss="modal" ng-click="editSubProperty(editSub, '@Session["Culture"]')">
+                        <i class="ace-icon fa fa-save"></i>
+                        Edit Sub Property
+                    </button>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+</div>

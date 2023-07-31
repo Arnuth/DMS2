@@ -1,0 +1,980 @@
+﻿@using Resources
+
+@{
+    ViewBag.Title = "REQ_900";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+
+    /* blue border on dydnamic data */
+    .data-dynamic {
+        border: 2px solid #6fb3e0;
+        border-radius: 15px;
+        padding-top: 5px;
+        /*padding-bottom: 10px;*/
+    }
+
+    /* progress bar */
+    .progress-wrp {
+        border: 1px solid #0099CC;
+        padding: 1px;
+        position: relative;
+        height: 30px;
+        border-radius: 3px;
+        /*margin: 10px;*/
+        text-align: left;
+        background: #fff;
+        box-shadow: inset 1px 3px 6px rgba(0, 0, 0, 0.12);
+    }
+
+        .progress-wrp .progress-bar {
+            height: 100%;
+            border-radius: 3px;
+            background-color: #f7c01b;
+            width: 0;
+            box-shadow: inset 1px 1px 10px rgba(0, 0, 0, 0.11);
+        }
+
+        .progress-wrp .status {
+            top: 3px;
+            left: 50%;
+            position: absolute;
+            display: inline-block;
+            color: #000000;
+        }
+</style>
+
+<div class="row" ng-controller="REQ_900_Ctrl" id="content">
+    @*<h2 ng-bind="document.DOCRUNNO"></h2>*@
+
+    <form class="form-horizontal" role="form" name="pageForm" novalidate>
+        <div class="space-12"></div>
+
+        <!-- ชื่อผู้ให้เช่า -->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">
+                ชื่อผู้ให้เช่า <span class="red">*</span>
+            </label>
+            <div class="col-sm-9">
+                <select class="chosen-select form-control"
+                        name="lessorName"
+                        required
+                        data-error-required="กรุณาเลือกชื่อผู้ให้เช่า"
+                        ng-model="tmplessorName"
+                        ng-options="lessorName as (lessorName.PROPERTYNAME + ' - ' + lessorName.PROPERTYDESC_TH) for lessorName in lessorNames">
+                    <option value="">โปรดเลือก</option>
+                </select>
+                @*<input ng-model="model.DOCUMENT_VEHICLERENTAL.LESSORNAME"
+                       name="lessorName"
+                       type="text"
+                       maxlength="80"
+                       required
+                       data-error-required="กรุณากรอกชื่อผู้ให้เช่า"
+                       class="col-xs-10 col-sm-5" />*@
+            </div>
+        </div>
+
+        <!-- เลขที่สัญญา -->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">
+                เลขที่สัญญา <span class="red">*</span>
+            </label>
+            <div class="col-sm-9">
+                <input ng-model="model.DOCUMENT_VEHICLERENTAL.VEHICLERENTAL_DOCNO"
+                       type="text"
+                       maxlength="80"
+                       required
+                       data-error-required="กรุณากรอกเลขที่สัญญา"
+                       class="col-xs-10 col-sm-5" />
+            </div>
+        </div>
+
+        <!-- ประเภทสินทรัพย์ -->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                ประเภทสินทรัพย์ <span class="red">*</span>
+            </label>
+
+            <div class="col-sm-9">
+                <select class="chosen-select form-control"
+                        name="vehicleType"
+                        required
+                        data-error-required="กรุณาเลือกประเภทสินทรัพย์"
+                        ng-change="updateVehicleTypeInfo()"
+                        ng-model="tmpVehicleType"
+                        ng-options="vehicleType as vehicleType.PROPERTYDESC_TH for vehicleType in vehicleTypes">
+                    <option value="">โปรดเลือก</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1"></label>
+            <div class="col-sm-9">
+                <span ng-bind="tmpVehicleType.PROPERTYDESC_EN"></span>
+            </div>
+        </div>
+
+        <!-- รายละเอียดสินทรัพย์ -->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">
+                รายละเอียดสินทรัพย์ <span class="red">*</span>
+            </label>
+        </div>
+
+        <div class="form-group" ng-repeat="assetDetail in model.DOCUMENT_VEHICLERENTAL.ASSETINFOS">
+
+            <div ng-attr-id="assetDetail_{{ $index }}" class="col-sm-10 col-sm-offset-1 data-dynamic">
+                <div class="col-sm-12">
+                    <em ng-bind="$index + 1"></em>
+                    <a href="javascript:void(0)" ng-hide="$first" class="tooltip-error pull-right" data-rel="tooltip" title="@Resource.delete" ng-click="deleteAssetDetail($index)">
+                        <span class="red">
+                            <i class="ace-icon fa fa-remove bigger-120"></i>
+                        </span>
+                    </a>
+                </div>
+
+                <!-- ยี่ห้อ/รุ่น -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">
+                        <span>ยี่ห้อ/รุ่น</span> <span class="red">*</span>
+                    </label>
+                    <div class="col-sm-9">
+                        <input ng-model="assetDetail.MODEL" type="text" maxlength="80" class="col-xs-10 col-sm-5"
+                               required
+                               ng-attr-data-error-required="กรุณากรอกยี่ห้อ/รุ่น สำหรับสินทรัพย์ที่ {{ $index + 1 }}" />
+                    </div>
+                </div>
+
+                <!-- น้ำหนักรถ (ซีซี) -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">
+                        <span style="padding-right: 0.8em;">น้ำหนักรถ (ซีซี)</span>
+                    </label>
+                    <div class="col-sm-9">
+                        <input ng-model="assetDetail.ENGINE_SIZE"
+                               type="text"
+                               ng-keypress="validateAmountNumber($event)" 
+                               oninput="this.value=angular.element(this).scope().currencyAmountNumber(this.value)"
+                               maxlength="80"
+                               class="col-xs-10 col-sm-5"
+                               ng-disabled="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) <= forkliftId" />
+                    </div>
+                </div>
+
+                <!-- สีรถ -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                        <span style="padding-right: 0.8em;">สีรถ</span>
+                    </label>
+
+                    <div class="col-sm-9">
+                        <select class="chosen-select form-control"
+                                ng-model="assetDetail.VEHICLE_COLOR_ID"
+                                ng-options="color.PROPERTYID as color.PROPERTYDESC_TH for color in colors"
+                                ng-disabled="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) <= forkliftId">
+                            <option value="">โปรดเลือก</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- จำนวนที่นั่งไม่เกิน -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                        จำนวนที่นั่ง <span class="red">*</span>
+                    </label>
+
+                    <div class="col-sm-9">
+                        <select class="chosen-select form-control"
+                                ng-model="assetDetail.VEHICLE_SEATTYPE_ID"
+                                ng-options="seatType.PROPERTYID as seatType.PROPERTYDESC_TH for seatType in seatTypes"
+                                ng-disabled="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) <= forkliftId"
+                                ng-attr-data-error-required="กรุณาเลือกจำนวนที่นั่ง สำหรับสินทรัพย์ที่ {{ $index + 1 }}">
+                            <option value="">โปรดเลือก</option>
+                        </select>
+                    </div>
+                </div>
+
+                <hr />
+
+                <!-- หมายเลขเครื่องยนต์ -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">
+                        หมายเลขเครื่องยนต์ <span class="red">*</span>
+                    </label>
+
+                    <div class="col-sm-9">
+                        <input maxlength="80"
+                               type="text"
+                               class="col-xs-10 col-sm-5"
+                               required
+                               ng-attr-data-error-required="กรุณากรอกหมายเลขเครื่องยนต์ สำหรับสินทรัพย์ที่ {{ $index + 1 }}"
+                               ng-model="assetDetail.ENGINE_NUMBER" />
+                    </div>
+                </div>
+
+                <!-- หมายเลขตัวถัง -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">
+                        หมายเลขตัวถัง <span class="red">*</span>
+                    </label>
+
+                    <div class="col-sm-9">
+                        <input maxlength="80"
+                               type="text"
+                               class="col-xs-10 col-sm-5"
+                               ng-required="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) > forkliftId"
+                               ng-disabled="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) <= forkliftId"
+                               ng-attr-data-error-required="กรุณากรอกหมายเลขตัวถัง สำหรับสินทรัพย์ที่ {{ $index + 1 }}"
+                               ng-model="assetDetail.VEHICLEBODY_NUMBER" />
+                    </div>
+                </div>
+
+                <!-- หมายเลขทะเบียนรถ -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">
+                        หมายเลขทะเบียนรถ <span class="red">*</span>
+                    </label>
+
+                    <div class="col-sm-9">
+                        <input maxlength="80"
+                               type="text"
+                               class="col-xs-10 col-sm-5"
+                               ng-required="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) > forkliftId"
+                               ng-disabled="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) <= forkliftId"
+                               ng-attr-data-error-required="กรุณากรอกหมายเลขทะเบียนรถ สำหรับสินทรัพย์ที่ {{ $index + 1 }}"
+                               ng-model="assetDetail.VEHICLE_LICENSE" />
+                    </div>
+                </div>
+
+                <!-- ประเภทป้ายทะเบียนรถ -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">
+                        ประเภทป้ายทะเบียนรถ <span class="red">*</span>
+                    </label>
+
+                    <div class="col-sm-9">
+                        <select class="chosen-select form-control"
+                                ng-required="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) > forkliftId"
+                                ng-disabled="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) <= forkliftId"
+                                ng-attr-data-error-required="กรุณาเลือกประเภทป้ายทะเบียนรถ สำหรับสินทรัพย์ที่ {{ $index + 1 }}"
+                                ng-model="assetDetail.VEHICLEPLATETYPEID"
+                                ng-options="vehiclePlateType.PROPERTYID as vehiclePlateType.PROPERTYDESC_TH for vehiclePlateType in vehiclePlateTypes">
+                            <option value="">โปรดเลือก</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- จังหวัด -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">
+                        จังหวัด <span class="red">*</span>
+                    </label>
+
+                    <div class="col-sm-9">
+                        <select class="chosen-select form-control"
+                                ng-required="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) > forkliftId"
+                                ng-disabled="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) <= forkliftId"
+                                ng-attr-data-error-required="กรุณาเลือกจังหวัด สำหรับสินทรัพย์ที่ {{ $index + 1 }}"
+                                ng-model="assetDetail.PROVINCEID"
+                                ng-options="province.PROPERTYID as province.PROPERTYDESC_TH for province in provinces track by province.PROPERTYID">
+                            <option value="">โปรดเลือก</option>
+                        </select>
+                    </div>
+                </div>
+
+                <hr />
+
+                <!-- ระยะเวลาการเช่า -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">
+                        ระยะเวลาการเช่า <span class="red">*</span>
+                    </label>
+
+                    <div class="col-sm-1">
+                        <div class="input-group col-sm-12">
+                            <input type="text"
+                                   maxlength="2"
+                                   ng-model="assetDetail.RENTALNUMBER"
+                                   only-digits
+                                   required
+                                   ng-attr-data-error-required="กรุณากรอกระยะเวลาการเช่า สำหรับสินทรัพย์ที่ {{ $index + 1 }}"
+                                   class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <select ng-model="assetDetail.RENTALUNIT"
+                                required
+                                ng-attr-data-error-required="กรุณาเลือกหน่วยระยะเวลาการเช่า สำหรับสินทรัพย์ที่ {{ $index + 1 }}"
+                                class="chosen-select form-control">
+                            <option value="">โปรดเลือก</option>
+                            <option value="MONTH">เดือน</option>
+                            <option value="YEAR">ปี</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <!-- วันที่เริ่มสัญญา -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">
+                        วันที่เริ่มสัญญา <span class="red">*</span>
+                    </label>
+
+                    <div class="col-sm-9">
+                        <div class="input-group col-xs-10 col-sm-5">
+                            <input class="form-control date-picker-max-year"
+                                   type="text"
+                                   ng-model="assetDetail.RENTAL_EFFECTIVEDATE"
+                                   required
+                                   ng-attr-data-error-required="กรุณาเลือกวันที่เริ่มสัญญา สำหรับสินทรัพย์ที่ {{ $index + 1 }}"
+                                   data-date-format="dd/mm/yyyy" />
+
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar bigger-110"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- วันที่สิ้นสุดสัญญา -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">
+                        วันที่สิ้นสุดสัญญา <span class="red">*</span>
+                    </label>
+
+                    <div class="col-sm-9">
+                        <div class="input-group col-xs-10 col-sm-5">
+                            <input class="form-control date-picker-max-10y"
+                                   ng-model="assetDetail.RENTAL_EXPIREDATE"
+                                   type="text"
+                                   required
+                                   ng-attr-data-error-required="กรุณาเลือกวันที่สิ้นสุดสัญญา สำหรับสินทรัพย์ที่ {{ $index + 1 }}"
+                                   data-date-format="dd/mm/yyyy" />
+
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar bigger-110"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ค่าเช่าต่อเดือน -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">ค่าเช่าต่อเดือน <span class="red">*</span></label>
+
+                    <div class="col-sm-9">
+                        <input id="DEPOSITAMOUNT"
+                               ng-model="assetDetail.RENTAMOUNT"
+                               ng-keypress="validateAmountNumber($event)" 
+                               oninput="this.value=angular.element(this).scope().currencyAmountNumber(this.value)"
+                               type="text"
+                               maxlength="18"
+                               required
+                               ng-attr-data-error-required="กรุณากรอกค่าเช่าต่อเดือน สำหรับสินทรัพย์ที่ {{ $index + 1 }}"
+                               class="col-xs-10 col-sm-5 text-right" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right"></label>
+
+                    <div class="col-sm-9">
+                        <div class="radio">
+
+                            <label ng-attr-for="rentVatCalflagTrue_{{$index}}">
+                                <input type="radio"
+                                       ng-attr-id="rentVatCalflagTrue_{{$index}}"
+                                       ng-attr-name="rentVatCalflag_{{$index}}"
+                                       ng-model="assetDetail.RENTTAXFLAG"
+                                       ng-value="0"
+                                       class="ace" />
+
+                                <span class="lbl"> ไม่รวมภาษีมูลค่าเพิ่ม</span>
+                            </label>
+
+                            <label ng-attr-for="rentVatCalflagFalse_{{$index}}">
+                                <input type="radio"
+                                       ng-attr-id="rentVatCalflagFalse_{{$index}}"
+                                       ng-attr-name="rentVatCalflag_{{$index}}"
+                                       ng-model="assetDetail.RENTTAXFLAG"
+                                       ng-value="1"
+                                       class="ace" />
+
+                                <span class="lbl"> รวมภาษีมูลค่าเพิ่ม</span>
+                            </label>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- เงินประกันการเช่า -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                        <span style="padding-right: 0.8em">เงินประกันการเช่า</span>
+                    </label>
+
+                    <div class="col-sm-9">
+                        <input type="text"
+                               ng-model="assetDetail.INSURANCECHARGEAMOUNT"
+                               ng-keypress="validateAmountNumber($event)" 
+                               oninput="this.value=angular.element(this).scope().currencyAmountNumber(this.value)"
+                               maxlength="18"
+                               class="col-xs-10 col-sm-5 text-right" />
+                    </div>
+                </div>
+
+                <hr />
+
+                <!-- บริษัทประกันภัย -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">
+                        บริษัทประกันภัย <span class="red">*</span>
+                    </label>
+
+                    <div class="col-sm-9">
+                        <input maxlength="80"
+                               type="text"
+                               class="col-xs-10 col-sm-5"
+                               ng-required="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) > forkliftId"
+                               ng-disabled="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) <= forkliftId"
+                               ng-attr-data-error-required="กรุณากรอกบริษัทประกันภัย สำหรับสินทรัพย์ที่ {{ $index + 1 }}"
+                               ng-model="assetDetail.INSURANCEBROKER" />
+                    </div>
+                </div>
+
+                <!-- เลขที่กรมธรรม์ -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">
+                        เลขที่กรมธรรม์ <span class="red">*</span>
+                    </label>
+
+                    <div class="col-sm-9">
+                        <input maxlength="80"
+                               type="text"
+                               class="col-xs-10 col-sm-5"
+                               ng-required="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) > forkliftId"
+                               ng-disabled="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) <= forkliftId"
+                               ng-attr-data-error-required="กรุณากรอกเลขที่กรมธรรม์ สำหรับสินทรัพย์ที่ {{ $index + 1 }}"
+                               ng-model="assetDetail.INSURANCENUMBER" />
+                    </div>
+                </div>
+
+                <!-- วันที่เริ่มการคุ้มครองประกันภัย -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">
+                        วันที่เริ่มการคุ้มครองประกันภัย <span class="red">*</span>
+                    </label>
+
+                    <div class="col-sm-9">
+                        <div class="input-group col-xs-10 col-sm-5">
+                            <input class="form-control date-picker-max-20"
+                                   type="text"
+                                   data-date-format="dd/mm/yyyy"
+                                   ng-required="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) > forkliftId"
+                                   ng-disabled="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) <= forkliftId"
+                                   ng-attr-data-error-required="กรุณาเลือกวันที่เริ่มการคุ้มครองประกันภัย สำหรับสินทรัพย์ที่ {{ $index + 1 }}"
+                                   ng-model="assetDetail.INSURANCE_EFFECTIVEDATE" />
+
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar bigger-110"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- วันที่สิ้นสุดการคุ้มครองประกันภัย -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">
+                        วันที่สิ้นสุดการคุ้มครองประกันภัย <span class="red">*</span>
+                    </label>
+
+                    <div class="col-sm-9">
+                        <div class="input-group col-xs-10 col-sm-5">
+                            <input class="form-control date-picker-max-20"
+                                   type="text"
+                                   data-date-format="dd/mm/yyyy"
+                                   ng-required="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) > forkliftId"
+                                   ng-disabled="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) <= forkliftId"
+                                   ng-attr-data-error-required="กรุณาเลือกวันที่สิ้นสุดการคุ้มครองประกันภัย สำหรับสินทรัพย์ที่ {{ $index + 1 }}"
+                                   ng-model="assetDetail.INSURANCE_EXPIREDATE" />
+
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar bigger-110"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <!-- วันที่เริ่มการคุ้มครองพ.ร.บ. -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">
+                        วันที่เริ่มการคุ้มครองพ.ร.บ. <span class="red">*</span>
+                    </label>
+
+                    <div class="col-sm-9">
+                        <div class="input-group col-xs-10 col-sm-5">
+                            <input class="form-control date-picker-max-20"
+                                   type="text"
+                                   data-date-format="dd/mm/yyyy"
+                                   ng-required="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) > forkliftId"
+                                   ng-disabled="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) <= forkliftId"
+                                   ng-attr-data-error-required="กรุณาเลือกวันที่เริ่มการคุ้มครองพ.ร.บ. สำหรับสินทรัพย์ที่ {{ $index + 1 }}"
+                                   ng-model="assetDetail.CARACT_EFFECTIVEDATE" />
+
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar bigger-110"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- วันที่สิ้นสุดการคุ้มครองพ.ร.บ. -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">
+                        วันที่สิ้นสุดการคุ้มครองพ.ร.บ. <span class="red">*</span>
+                    </label>
+
+                    <div class="col-sm-9">
+                        <div class="input-group col-xs-10 col-sm-5">
+                            <input class="form-control date-picker-max-20"
+                                   type="text"
+                                   data-date-format="dd/mm/yyyy"
+                                   ng-required="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) > forkliftId"
+                                   ng-disabled="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) <= forkliftId"
+                                   ng-attr-data-error-required="กรุณาเลือกวันที่สิ้นสุดการคุ้มครองพ.ร.บ. สำหรับสินทรัพย์ที่ {{ $index + 1 }}"
+                                   ng-model="assetDetail.CARACT_EXPIREDATE" />
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar bigger-110"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <!-- วันที่ดำเนินการต่ออายุภาษีรถยนต์ -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">
+                        วันที่ดำเนินการต่ออายุภาษีรถยนต์ <span class="red">*</span>
+                    </label>
+
+                    <div class="col-sm-9">
+                        <div class="input-group col-xs-10 col-sm-5">
+                            <input class="form-control date-picker-max-20"
+                                   ng-model="assetDetail.VEHICLETAX_EFFECTIVEDATE"
+                                   type="text"
+                                   ng-required="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) > forkliftId"
+                                   ng-disabled="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) <= forkliftId"
+                                   ng-attr-data-error-required="กรุณาเลือกวันที่ดำเนินการต่ออายุภาษีรถยนต์ สำหรับสินทรัพย์ที่ {{ $index + 1 }}"
+                                   data-date-format="dd/mm/yyyy" />
+
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar bigger-110"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- วันที่หมดอายุภาษีรถยนต์ -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">
+                        วันที่หมดอายุภาษีรถยนต์ <span class="red">*</span>
+                    </label>
+
+                    <div class="col-sm-9">
+                        <div class="input-group col-xs-10 col-sm-5">
+                            <input class="form-control date-picker-max-20"
+                                   ng-model="assetDetail.VEHICLETAX_EXPIREDATE"
+                                   type="text"
+                                   ng-required="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) > forkliftId"
+                                   ng-disabled="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) <= forkliftId"
+                                   ng-attr-data-error-required="กรุณาเลือกวันที่หมดอายุภาษีรถยนต์ สำหรับสินทรัพย์ที่ {{ $index + 1 }}"
+                                   data-date-format="dd/mm/yyyy" />
+
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar bigger-110"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <!-- หมายเลขบัตรฟลีตการ์ด -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">
+                        <span style="padding-right: 0.8em;">หมายเลขบัตรฟลีตการ์ด</span>
+                    </label>
+
+                    <div class="col-sm-9">
+                        <input maxlength="80"
+                               type="text"
+                               class="col-xs-10 col-sm-5"
+                               only-digits
+                               ng-disabled="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) <= forkliftId"
+                               ng-model="assetDetail.FLEETCARDNUMBER" />
+                    </div>
+                </div>
+
+                <!-- วงเงินการใช้บัตรฟลีตการ์ด -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">
+                        <span style="padding-right: 0.8em;">วงเงินการใช้บัตรฟลีตการ์ด</span>
+                    </label>
+                    <div class="col-sm-9">
+                        <input maxlength="80"
+                               type="text"
+                               class="col-xs-10 col-sm-5"
+                               ng-keypress="validateAmountNumber($event)" 
+                               oninput="this.value=angular.element(this).scope().currencyAmountNumber(this.value)"
+                               ng-disabled="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) <= forkliftId"
+                               ng-model="assetDetail.FLEETCARDBUDGET" />
+                    </div>
+                </div>
+
+                <!-- ผู้ใช้รถ -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">
+                        <span style="padding-right: 0.8em;">ผู้ใช้รถ</span>
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="chosen-select form-control"
+                                ng-model="assetDetail.DRIVERID"
+                                ng-options="driver.USERID as (driver.NAME_TH + ' ' + driver.LASTNAME_TH) for driver in drivers"
+                                ng-change="getUserProperty(assetDetail, assetDetail.DRIVERID)">
+                            <option value="">โปรดเลือก</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Cost Center -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">
+                        <span style="padding-right: 0.8em;">Cost Center</span>
+                    </label>
+                    <div class="col-sm-9 control-label" style="text-align:left">
+                        <span ng-bind="assetDetail.COSTCENTER"></span>
+                    </div>
+                </div>
+
+                <!-- แผนก -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">
+                        <span style="padding-right: 0.8em;">แผนก</span>
+                    </label>
+                    <div class="col-sm-9 control-label" style="text-align:left">
+                        <span ng-bind="assetDetail.DEPARTMENT"></span>
+                    </div>
+                </div>
+
+                <!-- ตำแหน่ง -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">
+                        <span style="padding-right: 0.8em;">ตำแหน่ง</span>
+                    </label>
+                    <div class="col-sm-9 control-label" style="text-align:left">
+                        <span ng-bind="assetDetail.POSITION"></span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-10 col-sm-offset-1 no-padding-right">
+                <button class="btn btn-info pull-right" ng-click="addAssetDetail()"><i class="ace-icon fa fa-plus"></i>เพิ่มสินทรัพย์ </button>
+            </div>
+        </div>
+
+        <hr />
+
+        <!-- วันที่ทำสัญญา -->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">วันที่ทำสัญญา <span class="red">*</span></label>
+            <div class="col-sm-9">
+                <div class="input-group col-xs-10 col-sm-5">
+                    <input type="text"
+                           ng-model="model.REQUEST.DOC_CREATEDATE"
+                           data-date-format="dd/mm/yyyy"
+                           required
+                           ng-attr-data-error-required="กรุณาเลือกวันที่ทำสัญญา"
+                           class="form-control date-picker-max-today" />
+
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar bigger-110"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- กำหนดชำระค่าเช่าแต่ละเดือนภายในวันที่ -->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                กำหนดชำระค่าเช่าแต่ละเดือนภายในวันที่ <span class="red">*</span>
+            </label>
+
+            <div class="col-sm-9">
+                <select class="chosen-select form-control"
+                        required
+                        ng-attr-data-error-required="กรุณาเลือกกำหนดชำระค่าเช่าแต่ละเดือนภายในวันที่"
+                        ng-model="model.DOCUMENT_VEHICLERENTAL.PAYMENTOUTWITHINDATE"
+                        ng-options="date for date in monthDates">
+                    <option value="">โปรดเลือก</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- รายละเอียดผู้รับเงิน -->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">
+                รายละเอียดผู้รับเงิน @*<span class="red">*</span>*@
+            </label>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-10 col-sm-offset-1 data-dynamic">
+
+                <!-- ชื่อผู้รับเงิน -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">ชื่อผู้รับเงิน </label>
+                    <div class="col-sm-9">
+                        <input type="text"
+                               ng-model="model.RECEIVEPERSONINFO.RECEIVEPERSONNAME"
+                               maxlength="80"
+                               ng-attr-data-error-required="กรุณากรอกชื่อผู้รับเงิน"
+                               class="col-xs-10 col-sm-5" />
+                    </div>
+                </div>
+
+                <!-- ธนาคารที่รับเงิน -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">ธนาคารที่รับเงิน </label>
+                    <div class="col-sm-9">
+                        <select class="chosen-select form-control"
+                                ng-attr-data-error-required="กรุณากรอกธนาคารที่รับเงิน"
+                                ng-model="model.RECEIVEPERSONINFO.BANKID"
+                                ng-options="bank.PROPERTYID as bank.PROPERTYDESC_TH for bank in banks track by bank.PROPERTYID">
+                            <option value="">โปรดเลือก</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- สาขา -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">สาขา </label>
+                    <div class="col-sm-9">
+                        <input type="text"
+                               ng-model="model.RECEIVEPERSONINFO.BANKBRANCHNAME"
+                               maxlength="80"
+                               ng-attr-data-error-required="กรุณากรอกสาขา"
+                               class="col-xs-10 col-sm-5" />
+                    </div>
+                </div>
+
+                <!-- เลขที่บัญชี -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">เลขที่บัญชี </label>
+                    <div class="col-sm-9">
+                        <input ng-model="model.RECEIVEPERSONINFO.BANKACCOUNTNO"
+                               maxlength="80"
+                               type="text"
+                               ng-attr-data-error-required="กรุณากรอกเลขที่บัญชี"
+                               ng-pattern="regex.bankAccount"
+                               ng-attr-data-error-pattern="รูปแบบเลขที่บัญชีไม่ถูกต้อง"
+                               class="col-xs-10 col-sm-5" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- แนบเอกสาร (รูปภาพ, pdf) -->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">แนบเอกสาร (รูปภาพ, pdf) <span class="red">*</span></label>
+        </div>
+
+        <!-- หนังสือสัญญาเช่ารถ -->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">
+                <span style="padding-right: 0.8em;">หนังสือสัญญาเช่ารถ</span>
+            </label>
+
+            <div class="col-sm-3">
+                <input type="file" id="vehicleRentalFile" class="file_input" required />
+            </div>
+
+            <div class="col-sm-3"></div>
+
+            <div id="vehicleRentalFileProgress" class="progress-wrp col-sm-3" style="display:none">
+                <div class="progress-bar"></div>
+                <div class="status">0%</div>
+            </div>
+        </div>
+
+        <!-- อื่นๆ (ถ้ามี) -->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">
+                <span style="padding-right: 0.8em;">อื่นๆ (ถ้ามี)</span>
+            </label>
+
+            <div class="col-sm-3">
+                <input multiple="" type="file" id="otherFiles" class="file-input-multi" />
+            </div>
+
+            <div class="col-sm-3"></div>
+
+            <div id="otherFilesProgress" class="progress-wrp col-sm-3" style="display:none">
+                <div class="progress-bar"></div>
+                <div class="status">0%</div>
+            </div>
+        </div>
+
+        <!-- ตั้งค่าการแจ้งเตือนล่วงหน้า สัญญาหมดอายุ -->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">
+                ตั้งค่าการแจ้งเตือนล่วงหน้า สัญญาหมดอายุ <span class="red">*</span>
+            </label>
+
+            <div class="col-sm-1">
+                <div class="input-group col-sm-12">
+                    <input type="text"
+                           maxlength="2"
+                           ng-model="model.REQUEST.NOTICENUMBER_EXPIRE"
+                           only-digits
+                           required
+                           ng-attr-data-error-required="กรุณากรอกตั้งค่าการแจ้งเตือนล่วงหน้า สัญญาหมดอายุ"
+                           class="form-control" />
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <select ng-model="model.REQUEST.NOTICEUNIT_EXPIRE"
+                        required
+                        ng-attr-data-error-required="กรุณาเลือกหน่วยตั้งค่าการแจ้งเตือนล่วงหน้า สัญญาหมดอายุ"
+                        class="chosen-select form-control">
+                    <option value="">โปรดเลือก</option>
+                    <option value="DAY">วัน</option>
+                    <option value="MONTH">เดือน</option>
+                    <option value="YEAR">ปี</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- ตั้งค่าการแจ้งเตือนล่วงหน้า กรมธรรม์หมดอายุ -->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">
+                ตั้งค่าการแจ้งเตือนล่วงหน้า กรมธรรม์หมดอายุ <span class="red">*</span>
+            </label>
+
+            <div class="col-sm-1">
+                <div class="input-group col-sm-12">
+                    <input type="text"
+                           maxlength="2"
+                           ng-model="model.REQUEST.NOTICENUMBER_INSURANCE"
+                           only-digits
+                           ng-required="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) > forkliftId"
+                           ng-disabled="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) <= forkliftId"
+                           ng-attr-data-error-required="กรุณากรอกตั้งค่าการแจ้งเตือนล่วงหน้า กรมธรรม์หมดอายุ"
+                           class="form-control" />
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <select ng-model="model.REQUEST.NOTICEUNIT_INSURANCE"
+                        ng-required="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) > forkliftId"
+                        ng-disabled="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) <= forkliftId"
+                        ng-attr-data-error-required="กรุณาเลือกหน่วยตั้งค่าการแจ้งเตือนล่วงหน้า กรมธรรม์หมดอายุ"
+                        class="chosen-select form-control">
+                    <option value="">โปรดเลือก</option>
+                    <option value="DAY">วัน</option>
+                    <option value="MONTH">เดือน</option>
+                    <option value="YEAR">ปี</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- ตั้งค่าการแจ้งเตือนล่วงหน้า พ.ร.บ.หมดอายุ -->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">
+                ตั้งค่าการแจ้งเตือนล่วงหน้า พ.ร.บ.หมดอายุ <span class="red">*</span>
+            </label>
+
+            <div class="col-sm-1">
+                <div class="input-group col-sm-12">
+                    <input type="text"
+                           maxlength="2"
+                           ng-model="model.REQUEST.NOTICENUMBER_CARACT"
+                           ng-disabled="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) <= forkliftId"
+                           only-digits
+                           ng-required="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) > forkliftId"
+                           ng-attr-data-error-required="กรุณากรอกตั้งค่าการแจ้งเตือนล่วงหน้า พ.ร.บ.หมดอายุ"
+                           class="form-control" />
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <select ng-model="model.REQUEST.NOTICEUNIT_CARACT"
+                        ng-required="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) > forkliftId"
+                        ng-disabled="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) <= forkliftId"
+                        ng-attr-data-error-required="กรุณาเลือกตั้งค่าการแจ้งเตือนล่วงหน้า พ.ร.บ.หมดอายุ"
+                        class="chosen-select form-control">
+                    <option value="">โปรดเลือก</option>
+                    <option value="DAY">วัน</option>
+                    <option value="MONTH">เดือน</option>
+                    <option value="YEAR">ปี</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- ตั้งค่าการแจ้งเตือนล่วงหน้า ภาษีรถยนต์หมดอายุ -->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">
+                ตั้งค่าการแจ้งเตือนล่วงหน้า ภาษีรถยนต์หมดอายุ <span class="red">*</span>
+            </label>
+
+            <div class="col-sm-1">
+                <div class="input-group col-sm-12">
+                    <input type="text"
+                           maxlength="2"
+                           ng-disabled="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) <= forkliftId"
+                           ng-model="model.REQUEST.NOTICENUMBER_VEHICLETAX"
+                           only-digits
+                           ng-required="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) > forkliftId"
+                           ng-attr-data-error-required="กรุณากรอกตั้งค่าการแจ้งเตือนล่วงหน้า ภาษีรถยนต์หมดอายุ"
+                           class="form-control" />
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <select ng-model="model.REQUEST.NOTICEUNIT_VEHICLETAX"
+                        ng-required="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) > forkliftId"
+                        ng-disabled="(model.DOCUMENT_VEHICLERENTAL.VEHICLERENTALTYPEID || 0) <= forkliftId"
+                        ng-attr-data-error-required="กรุณาเลือกตั้งค่าการแจ้งเตือนล่วงหน้า ภาษีรถยนต์หมดอายุ"
+                        class="chosen-select form-control">
+                    <option value="">โปรดเลือก</option>
+                    <option value="DAY">วัน</option>
+                    <option value="MONTH">เดือน</option>
+                    <option value="YEAR">ปี</option>
+                </select>
+            </div>
+        </div>
+
+    </form>
+
+    <div class="">
+        <button class="btn btn-info" type="button" ng-click="saveDraft(req, doc)">
+            <i class="ace-icon fa fa-check bigger-110"></i>
+            บันทึกฉบับร่าง
+        </button>
+
+        <button class="btn btn-info pull-right" type="button" ng-click="submitDocument(req, doc)">
+            <i class="ace-icon fa fa-check bigger-110"></i>
+            ส่งคำร้อง
+        </button>
+    </div>
+</div>

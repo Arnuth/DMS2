@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E43F38B9-025D-4D31-A502-1066200C4602}</ProjectGuid>
+    <ProjectTypeGuids>{32f31d43-81cc-4c15-9de6-3fc5453562b6};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ESN_NET.DBconnect</RootNamespace>
+    <AssemblyName>ESN_NET.DBconnect</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Activities" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activities" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Account\DAO\AccountDAO.cs" />
+    <Compile Include="Account\MODEL\AccountModel.cs" />
+    <Compile Include="AssetInfo\DAO\AssetInfoDAO.cs" />
+    <Compile Include="AssetInfo\MODEL\AssetInfoModel.cs" />
+    <Compile Include="CJBank\DAO\CJBankDAO.cs" />
+    <Compile Include="CJBank\MODEL\CJBankModel.cs" />
+    <Compile Include="Common\CommonModel.cs" />
+    <Compile Include="Common\SQLconnect.cs" />
+    <Compile Include="DeedOwnerInfo\DAO\DeedOwnerInfoDAO.cs" />
+    <Compile Include="DeedOwnerInfo\MODEL\DeedOwnerInfoModel.cs" />
+    <Compile Include="DocumentLandLeaseAgreement\DAO\DocumentLandLeaseAgreementDAO.cs" />
+    <Compile Include="DocumentLandLeaseAgreement\MODEL\DocumentLandLeaseAgreementModel.cs" />
+    <Compile Include="DocumentLicense\DAO\DocumentLicenseDAO.cs" />
+    <Compile Include="DocumentLicense\MODEL\DocumentLicenseModel.cs" />
+    <Compile Include="DocumentSpaceRental\DAO\DocumentSpaceRentalDAO.cs" />
+    <Compile Include="DocumentSpaceRental\MODEL\DocumentSpaceRentalModel.cs" />
+    <Compile Include="DocumentVehicleRental\DAO\DocumentVehicleRentalDAO.cs" />
+    <Compile Include="DocumentVehicleRental\MODEL\DocumentVehicleRentalModel.cs" />
+    <Compile Include="Document\DAO\DocumentDAO.cs" />
+    <Compile Include="Document\MODEL\DocumentModel.cs" />
+    <Compile Include="FileAttachment\DAO\FileAttachmentDAO.cs" />
+    <Compile Include="FileAttachment\MODEL\FileAttachmentModel.cs" />
+    <Compile Include="LandLeaseRate\DAO\LandLeaseRateDAO.cs" />
+    <Compile Include="LandLeaseRate\MODEL\LandLeaseRateModel.cs" />
+    <Compile Include="LesseeInfo\DAO\LesseeInfoDAO.cs" />
+    <Compile Include="LesseeInfo\MODEL\LesseeInfoModel.cs" />
+    <Compile Include="LessorInfo\DAO\LessorInfoDAO.cs" />
+    <Compile Include="LessorInfo\MODEL\LessorInfoModel.cs" />
+    <Compile Include="Menu\DAO\MenuDAO.cs" />
+    <Compile Include="Menu\MODEL\MenuModel.cs" />
+    <Compile Include="Notification\DAO\NotificationDAO.cs" />
+    <Compile Include="Notification\MODEL\NotificationModel.cs" />
+    <Compile Include="Notification\MODEL\NotificationRequestModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Property\DAO\PropertyDAO.cs" />
+    <Compile Include="Property\MODEL\PropertyModel.cs" />
+    <Compile Include="ReceiveAccountInfo\DAO\ReceiveAccountInfoDAO.cs" />
+    <Compile Include="ReceiveAccountInfo\MODEL\ReceiveAccountInfoModel.cs" />
+    <Compile Include="ReceivePersonInfo\DAO\ReceivePersonInfoDAO.cs" />
+    <Compile Include="ReceivePersonInfo\MODEL\ReceivePersonInfoModel.cs" />
+    <Compile Include="Report\DAO\ReportDAO.cs" />
+    <Compile Include="Report\MODEL\ReportModel.cs" />
+    <Compile Include="Report\MODEL\ReportParameterModel.cs" />
+    <Compile Include="Request\DAO\RequestDAO.cs" />
+    <Compile Include="Request\MODEL\RequestModel.cs" />
+    <Compile Include="Search\DAO\SearchDAO.cs" />
+    <Compile Include="Search\MODEL\RequestStatusModel.cs" />
+    <Compile Include="Search\MODEL\SearchRequestStatusModel.cs" />
+    <Compile Include="Search\MODEL\SearchRequestStatusResultModel.cs" />
+    <Compile Include="SpaceRentalSize\DAO\SpaceRentalSizeDAO.cs" />
+    <Compile Include="SpaceRentalSize\MODEL\SpaceRentalSizeModel.cs" />
+    <Compile Include="Status\DAO\StatusDAO.cs" />
+    <Compile Include="Status\MODEL\StatusModel.cs" />
+    <Compile Include="Store\DAO\StoreDAO.cs" />
+    <Compile Include="Store\MODEL\StoreModel.cs" />
+    <Compile Include="TaxType\DAO\TaxTypeDAO.cs" />
+    <Compile Include="TaxType\MODEL\TaxTypeModel.cs" />
+    <Compile Include="UserClass\DAO\UserClassDAO.cs" />
+    <Compile Include="UserClass\MODEL\UserClassModel.cs" />
+    <Compile Include="User\DAO\UserDAO.cs" />
+    <Compile Include="User\MODEL\UserModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ESN_NET.COMMON\ESN_NET.COMMON.csproj">
+      <Project>{7b8d061c-cffc-491a-a729-c8240251821f}</Project>
+      <Name>ESN_NET.COMMON</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,516 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="add" xml:space="preserve">
+    <value>Add</value>
+    <comment>Add</comment>
+  </data>
+  <data name="addSubProperty" xml:space="preserve">
+    <value>Add Sub Property</value>
+    <comment>addSubProperty</comment>
+  </data>
+  <data name="appName" xml:space="preserve">
+    <value>CJ Express</value>
+    <comment>CJ Express</comment>
+  </data>
+  <data name="companyName" xml:space="preserve">
+    <value>บริษัท ซีเจ เอ็กเพรส กรุ๊ป จํากัด</value>
+    <comment>CJ Express</comment>
+  </data>
+  <data name="confirmpassword" xml:space="preserve">
+    <value>Confirm Password</value>
+    <comment>Confirm Password</comment>
+  </data>
+  <data name="createproperty" xml:space="preserve">
+    <value>Create New Property</value>
+    <comment>Create New Property</comment>
+  </data>
+  <data name="delete" xml:space="preserve">
+    <value>Delete</value>
+    <comment>Delete</comment>
+  </data>
+  <data name="deleteSubProperty" xml:space="preserve">
+    <value>Delete Sub Property</value>
+    <comment>deleteSubProperty</comment>
+  </data>
+  <data name="doc" xml:space="preserve">
+    <value>Doc</value>
+    <comment>Doc</comment>
+  </data>
+  <data name="document" xml:space="preserve">
+    <value>Document</value>
+    <comment>Document</comment>
+  </data>
+  <data name="download" xml:space="preserve">
+    <value>Download</value>
+    <comment>Download</comment>
+  </data>
+  <data name="edit" xml:space="preserve">
+    <value>Edit</value>
+    <comment>Edit</comment>
+  </data>
+  <data name="email" xml:space="preserve">
+    <value>Email</value>
+    <comment>Email</comment>
+  </data>
+  <data name="editProperty" xml:space="preserve">
+    <value>Edit Property</value>
+    <comment>editProperty</comment>
+  </data>
+  <data name="editSubProperty" xml:space="preserve">
+    <value>Edit Sub Property</value>
+    <comment>editSubProperty</comment>
+  </data>
+  <data name="filterUserClass" xml:space="preserve">
+    <value>Filter User Class</value>
+    <comment>Filter User Class</comment>
+  </data>
+  <data name="nameEN" xml:space="preserve">
+    <value>Name (EN)</value>
+    <comment>Name (EN)</comment>
+  </data>
+  <data name="nameTH" xml:space="preserve">
+    <value>Name (TH)</value>
+    <comment>Name (TH)</comment>
+  </data>
+  <data name="no" xml:space="preserve">
+    <value>No.</value>
+    <comment>No.</comment>
+  </data>
+  <data name="password" xml:space="preserve">
+    <value>Password</value>
+    <comment>Password</comment>
+  </data>
+  <data name="propertiesinsystem" xml:space="preserve">
+    <value>Properties In System</value>
+    <comment>Properties In System</comment>
+  </data>
+  <data name="propertydesc_en" xml:space="preserve">
+    <value>Property Description (EN)</value>
+    <comment>Property Description (EN)</comment>
+  </data>
+  <data name="propertydesc_th" xml:space="preserve">
+    <value>Property Description (TH)</value>
+    <comment>Property Description (TH)</comment>
+  </data>
+  <data name="propertyname" xml:space="preserve">
+    <value>Property Name</value>
+    <comment>Property Name</comment>
+  </data>
+  <data name="resultUserClass" xml:space="preserve">
+    <value>Results for "User Class"</value>
+    <comment>Results for "User Class"</comment>
+  </data>
+  <data name="search" xml:space="preserve">
+    <value>Search</value>
+    <comment>Search</comment>
+  </data>
+  <data name="surnameEN" xml:space="preserve">
+    <value>Surname (EN)</value>
+    <comment>Surname (EN)</comment>
+  </data>
+  <data name="subPropertyDesc_EN" xml:space="preserve">
+    <value>Sub Property Description (EN)</value>
+    <comment>subPropertyDesc_EN</comment>
+  </data>
+  <data name="subPropertyDesc_TH" xml:space="preserve">
+    <value>Sub Property Description (TH)</value>
+    <comment>subPropertyDesc_TH</comment>
+  </data>
+  <data name="subPropertyName" xml:space="preserve">
+    <value>Sub Property Name</value>
+    <comment>subPropertyName</comment>
+  </data>
+  <data name="surnameTH" xml:space="preserve">
+    <value>Surname (TH)</value>
+    <comment>Surname (TH)</comment>
+  </data>
+  <data name="user" xml:space="preserve">
+    <value>User</value>
+    <comment>User</comment>
+  </data>
+  <data name="userClass" xml:space="preserve">
+    <value>User Class</value>
+    <comment>User Class</comment>
+  </data>
+  <data name="username" xml:space="preserve">
+    <value>User Name</value>
+    <comment>User Name</comment>
+  </data>
+  <data name="filterUser" xml:space="preserve">
+    <value>Filter User</value>
+    <comment>Filter User</comment>
+  </data>
+  <data name="active" xml:space="preserve">
+    <value>Active</value>
+    <comment>Active</comment>
+  </data>
+  <data name="all" xml:space="preserve">
+    <value>All</value>
+    <comment>All</comment>
+  </data>
+  <data name="description" xml:space="preserve">
+    <value>Description</value>
+    <comment>Description</comment>
+  </data>
+  <data name="inactive" xml:space="preserve">
+    <value>Inactive</value>
+    <comment>Inactive</comment>
+  </data>
+  <data name="property_code" xml:space="preserve">
+    <value>Property Code</value>
+    <comment>Property Code</comment>
+  </data>
+  <data name="resultUser" xml:space="preserve">
+    <value>Results for "User"</value>
+    <comment>Results for "User"</comment>
+  </data>
+  <data name="updateUser" xml:space="preserve">
+    <value>Update User</value>
+    <comment>Update User</comment>
+  </data>
+  <data name="reset" xml:space="preserve">
+    <value>Reset</value>
+    <comment>Reset</comment>
+  </data>
+  <data name="submit" xml:space="preserve">
+    <value>Submit</value>
+    <comment>Submit</comment>
+  </data>
+  <data name="changePassword" xml:space="preserve">
+    <value>Change Password</value>
+    <comment>Change Password</comment>
+  </data>
+  <data name="newPassword" xml:space="preserve">
+    <value>New Password</value>
+    <comment>New Password</comment>
+  </data>
+  <data name="oldPassword" xml:space="preserve">
+    <value>Old Password</value>
+    <comment>Old Password</comment>
+  </data>
+  <data name="agreementDocNo" xml:space="preserve">
+    <value>Agreement Doc No</value>
+    <comment>Agreement Doc No</comment>
+  </data>
+  <data name="licenseDocNo" xml:space="preserve">
+    <value>License Doc No</value>
+    <comment>License Doc No</comment>
+  </data>
+  <data name="storeCode" xml:space="preserve">
+    <value>Store Code</value>
+    <comment>Store Code</comment>
+  </data>
+  <data name="storeNameEN" xml:space="preserve">
+    <value>Store Name (EN)</value>
+    <comment>Store Name EN</comment>
+  </data>
+  <data name="storeNameTH" xml:space="preserve">
+    <value>Store Name (TH)</value>
+    <comment>Store Name TH</comment>
+  </data>
+  <data name="filterStore" xml:space="preserve">
+    <value>Filter Store</value>
+    <comment>Filter Store</comment>
+  </data>
+  <data name="resultStore" xml:space="preserve">
+    <value>Results for "Store"</value>
+    <comment>Results for "Store"</comment>
+  </data>
+  <data name="updateStore" xml:space="preserve">
+    <value>Update Store</value>
+    <comment>Update Store</comment>
+  </data>
+  <data name="addStore" xml:space="preserve">
+    <value>Add Store</value>
+    <comment>Add Store</comment>
+  </data>
+  <data name="status" xml:space="preserve">
+    <value>Status</value>
+    <comment>Status</comment>
+  </data>
+  <data name="selectStatus" xml:space="preserve">
+    <value>Select status</value>
+    <comment>Select Status</comment>
+  </data>
+  <data name="agreementType" xml:space="preserve">
+    <value>Agreement Type</value>
+    <comment>Agreement Type</comment>
+  </data>
+  <data name="approveUser" xml:space="preserve">
+    <value>Approve User</value>
+    <comment>Approve User</comment>
+  </data>
+  <data name="docEffectiveDate" xml:space="preserve">
+    <value>Effective Date</value>
+    <comment>Effective Date</comment>
+  </data>
+  <data name="docExpireDate" xml:space="preserve">
+    <value>Expire Date</value>
+    <comment>Expire Date</comment>
+  </data>
+  <data name="docRunNo" xml:space="preserve">
+    <value>Doc Run No</value>
+    <comment>Doc Run No</comment>
+  </data>
+  <data name="filterDocument" xml:space="preserve">
+    <value>Filter Document</value>
+    <comment>Filter Document</comment>
+  </data>
+  <data name="resultDoc" xml:space="preserve">
+    <value>Result Doc</value>
+    <comment>Result Doc</comment>
+  </data>
+  <data name="storeName" xml:space="preserve">
+    <value>Store Name</value>
+    <comment>Store Name</comment>
+  </data>
+  <data name="updateDate" xml:space="preserve">
+    <value>Update Date</value>
+    <comment>Update Date</comment>
+  </data>
+  <data name="userRequestId" xml:space="preserve">
+    <value>User Request Id</value>
+    <comment>User Request Id</comment>
+  </data>
+  <data name="userVerifyId" xml:space="preserve">
+    <value>User Verify Id</value>
+    <comment>User Verify Id</comment>
+  </data>
+  <data name="vendorName" xml:space="preserve">
+    <value>Vendor Name</value>
+    <comment>Vendor Name</comment>
+  </data>
+  <data name="store" xml:space="preserve">
+    <value>Store</value>
+    <comment>Store</comment>
+  </data>
+  <data name="province" xml:space="preserve">
+    <value>Province</value>
+    <comment>Province</comment>
+  </data>
+  <data name="licenseType" xml:space="preserve">
+    <value>License Type</value>
+    <comment>License Type</comment>
+  </data>
+  <data name="licenseEndDate" xml:space="preserve">
+    <value>License End Date</value>
+    <comment>License End Date</comment>
+  </data>
+  <data name="licenseRenewDate" xml:space="preserve">
+    <value>License Renew Date</value>
+    <comment>License Renew Date</comment>
+  </data>
+  <data name="downloadAll" xml:space="preserve">
+    <value>Download All</value>
+    <comment>Download All</comment>
+  </data>
+  <data name="turnOffAlert" xml:space="preserve">
+    <value>Turn Off Alert</value>
+    <comment>Turn Off Alert</comment>
+  </data>
+  <data name="confirmTurnOffAlert" xml:space="preserve">
+    <value>Confirm turn off alert {0} item{1}</value>
+    <comment>Confirm turn off alert item</comment>
+  </data>
+  <data name="confirmTurnOffAlertModalTitle" xml:space="preserve">
+    <value>Confirm Turn Of Alert Selection</value>
+    <comment>Confirm Turn Off Alert Modal Title</comment>
+  </data>
+  <data name="ok" xml:space="preserve">
+    <value>OK</value>
+    <comment>OK</comment>
+  </data>
+  <data name="alertList" xml:space="preserve">
+    <value>Alert List</value>
+    <comment>Alert List</comment>
+  </data>
+  <data name="conditionExpireDate" xml:space="preserve">
+    <value>Condition Expire Date</value>
+    <comment>Condition Expire Date</comment>
+  </data>
+  <data name="noticeDate" xml:space="preserve">
+    <value>Notice Date</value>
+    <comment>Notice Date</comment>
+  </data>
+  <data name="specifyPaidDate" xml:space="preserve">
+    <value>Please specify paid date</value>
+    <comment>Specify Paid Date</comment>
+  </data>
+  <data name="startEndDate" xml:space="preserve">
+    <value>Start-End Date</value>
+    <comment>Start End Date</comment>
+  </data>
+  <data name="costCenter" xml:space="preserve">
+    <value>Cost Center</value>
+    <comment>Cost Center</comment>
+  </data>
+  <data name="spaceRentalDocNo" xml:space="preserve">
+    <value>Doc No</value>
+    <comment>Space Rental Doc No</comment>
+  </data>
+  <data name="spaceRentalType" xml:space="preserve">
+    <value>Space Rental Type</value>
+    <comment>Space Rental Type</comment>
+  </data>
+  <data name="lesseeVendorName" xml:space="preserve">
+    <value>Lessee Vendor Name</value>
+    <comment>Lessee Vendor Name</comment>
+  </data>
+  <data name="assetType" xml:space="preserve">
+    <value>Asset Type</value>
+    <comment>Asset Type</comment>
+  </data>
+  <data name="engineNo" xml:space="preserve">
+    <value>Engine No.</value>
+    <comment>Engine No.</comment>
+  </data>
+  <data name="vehicleLicense" xml:space="preserve">
+    <value>Vehicle License No.</value>
+    <comment>Vehicle License No.</comment>
+  </data>
+  <data name="vehicleModel" xml:space="preserve">
+    <value>Vehicle Model</value>
+    <comment>Vehicle Model</comment>
+  </data>
+  <data name="vehicleRentalDocNo" xml:space="preserve">
+    <value>Doc No.</value>
+    <comment>Vehicle Rental Doc No.</comment>
+  </data>
+  <data name="spaceRentalConditionExpireDate" xml:space="preserve">
+    <value>Space Rental Conditional Expire Date</value>
+    <comment>Space Rental Condtional Expire Date</comment>
+  </data>
+  <data name="pleaseSelect" xml:space="preserve">
+    <value>Please select</value>
+    <comment>Please select</comment>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+    <comment>Name</comment>
+  </data>
+  <data name="Surname" xml:space="preserve">
+    <value>Surname</value>
+    <comment>Surname</comment>
+  </data>
+  <data name="feeAmount" xml:space="preserve">
+    <value>Fee Amount</value>
+    <comment>Fee Amount</comment>
+  </data>
+</root>

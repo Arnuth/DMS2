@@ -1,0 +1,82 @@
+﻿@using Resources
+
+@{
+    ViewBag.Title = "USER_300";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="main-container animate-bottom" id="content">
+    <div class="main-content">
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1">
+                <div class="login-container" style="padding-top: 70px">
+                    <div class="center">
+                        <h1>
+                            <i class="ace-icon fa fa-folder-open-o green"></i>
+                            <span class="red">@Resource.appName</span>
+                            <span class="grey" id="id-text2">Application</span>
+                        </h1>
+                        <h4 class="blue" id="id-company-text">&copy; @Resource.companyName</h4>
+                    </div>
+
+                    <div class="space-6"></div>
+
+                    <div class="position-relative">
+                        <div id="login-box" class="login-box visible widget-box no-border">
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <h4 class="header blue lighter bigger">
+                                        <i class="ace-icon fa fa-user green"></i>
+                                        @Resource.changePassword
+                                    </h4>
+
+                                    <div class="space-6"></div>
+
+                                    <form ng-controller="USER_003_Ctrl">
+                                        <fieldset>
+                                            <label class="block clearfix">
+                                                <span class="block input-icon input-icon-right">
+                                                    <input type="password" ng-model="oldpass" class="form-control" placeholder="@Resource.oldPassword" pattern="[A-Za-z0-9]{3,12}" maxlength="12" />
+                                                    <i class="ace-icon fa fa-certificate"></i>
+                                                </span>
+                                            </label>
+                                            <label class="block clearfix">
+                                                <span class="block input-icon input-icon-right">
+                                                    <input type="password" ng-model="newpass" class="form-control" placeholder="@Resource.newPassword" pattern="[A-Za-z0-9]{3,12}" maxlength="12" />
+                                                    <i class="ace-icon fa fa-lock"></i>
+                                                </span>
+                                            </label>
+                                            <label class="block clearfix">
+                                                <span class="block input-icon input-icon-right">
+                                                    <input type="password" ng-model="confirmnewpass" class="form-control" placeholder="@Resource.confirmpassword" maxlength="12" />
+                                                    <i class="ace-icon fa fa-lock"></i>
+                                                </span>
+                                            </label>
+
+                                            <div class="clearfix" style="text-align: center">
+                                                <button type="button" class="btn btn-sm btn-danger" ng-click="changePasswordUser(oldpass,newpass,confirmnewpass)">
+                                                    <i class="ace-icon fa  fa-exchange"></i>
+                                                    <span class="bigger-110">@Resource.changePassword!</span>
+                                                </button>
+                                            </div>
+                                        </fieldset>
+                                    </form>
+
+
+                                </div>
+                                <!-- /.widget-main -->
+                            </div>
+                            <!-- /.widget-body -->
+                        </div>
+                        <!-- /.login-box -->
+                    </div>
+                    <!-- /.position-relative -->
+
+                </div>
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.main-content -->
+</div>

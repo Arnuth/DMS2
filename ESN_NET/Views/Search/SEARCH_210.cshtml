@@ -1,0 +1,168 @@
+﻿@{
+    ViewBag.Title = "SEARCH_210";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div ng-controller="SEARCH_210_Ctrl" id="content">
+    <div class="row">
+        <div class="col-sm-6">
+
+            <h4 class="row header smaller lighter orange">
+                <span class="col-sm-8">
+                    <i class="ace-icon fa fa-bell"></i>
+                    <span ng-bind="document.REQUEST.DOCTYPENAME"></span>
+                </span><!-- /.col -->
+            </h4>
+
+            <div class="profile-user-info profile-user-info-striped">
+
+                <!--เลขที่ใบคำร้อง-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">เลขที่ใบคำร้อง </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.REQUEST.REQID"></span>
+                    </div>
+                </div>
+
+                <!--รหัสสาขา-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">รหัสสาขา </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.REQUEST.STORECODE"></span>
+                    </div>
+                </div>
+
+                <!--ชื่อสาขา-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">ชื่อสาขา </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.REQUEST.STORENAME"></span>
+                    </div>
+                </div>
+
+                <!--ประเภทสัญญา-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">ประเภทสัญญา </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.DOCUMENT_LICENSE.LICENSETYPENAME"></span>
+                    </div>
+                </div>
+
+                <!--เล่มที่-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">เล่มที่ </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.DOCUMENT_LICENSE.LICENSEBOOKNO"></span>
+                    </div>
+                </div>
+
+                <!--เลขที่ หรือฉบับที่-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">เลขที่ หรือฉบับที่ </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.DOCUMENT_LICENSE.LICENSEDOCNO"></span>
+                    </div>
+                </div>
+
+                <!--ค่าธรรมเนียม (บาท)-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">ค่าธรรมเนียม (บาท) </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.DOCUMENT_LICENSE.FEEAMOUNTTEXT"></span>
+                    </div>
+                </div>
+              
+
+                <!--วันที่ทำสัญญา-->
+                @*<div class="profile-info-row">
+                    <div class="profile-info-name">วันที่ทำสัญญา </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.REQUEST.BCDOC_CREATEDATE"></span>
+                    </div>
+                </div>*@
+
+                <!--วันที่ดำเนินการต่ออายุ-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">วันที่ดำเนินการต่ออายุ </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.REQUEST.BCDOC_EFFECTIVEDATE"></span>
+                    </div>
+                </div>
+
+                <!--วันที่หมดอายุ-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">วันที่หมดอายุ </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.REQUEST.BCDOC_EXPIREDATE"></span>
+                    </div>
+                </div>
+                
+                <!--กำหนดการยกเลิก-->
+                <div class="profile-info-row" ng-show="document.REQUEST.REVISIONTYPE == 3">
+                    <div class="profile-info-name">กำหนดการยกเลิก </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.REQUEST.BCDOC_CANCELDATE"></span>
+                    </div>
+                </div>
+
+                <!--หมายเหตุ-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">หมายเหตุ </div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" ng-bind="document.REQUEST.REMARKS"></span>
+                    </div>
+                </div>
+
+                <!--ตั้งค่าแจ้งเตือนใบอนุญาตหมดอายุ-->
+                <div class="profile-info-row">
+                    <div class="profile-info-name">ตั้งค่าแจ้งเตือนใบอนุญาตหมดอายุ </div>
+
+                    <div class="profile-info-value align-middle">
+                        <span class="editable" ng-bind="document.REQUEST.NOTICEDISPLAY_EXPIRE"></span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    
+        <div style="margin-left:5%" class="col-sm-5">
+            <h4 class="row header smaller lighter orange">
+                <span class="col-sm-8">
+                    <i class="ace-icon fa fa-bell"></i>
+                    เอกสาร
+                </span><!-- /.col -->
+            </h4>
+            <div class="profile-user-info profile-user-info-striped">
+                <div class="profile-info-row" ng-repeat="file in files" track by $index>
+                    <div class="profile-info-name" ng-bind="file.DOCFILETYPE"></div>
+                    <div class="profile-info-name" style="width:200px; text-align:left" ng-bind-template="[ {{file.PATH}} ]"></div>
+                    <div class="profile-info-name" style="width:200px; text-align:left" ng-bind-template="สร้างเอกสารเมื่อ {{file.BC_CREATEDATE}}"></div>
+                    <button class="btn btn-xs btn-grey" style="border-radius:2px;margin:5px" ng-click="downloadDocumentFromServer(file, document.REQUEST.STORECODE, document.REQUEST.DOCTYPENAME)">
+                        <i class="ace-icon fa  fa-cloud-download bigger-110"></i>
+                        ดาวน์โหลด
+                    </button>
+
+                    @*<div class="profile-info-value">
+                                <button class="btn btn-danger" ng-hide="hideDownloadNormal(1)" ng-click="getFile(document.DOCFILELOCATION1,document.DOCRUNNO,document.DOCTYPE)">Download</button>
+                                {{document.DOCFILELOCATION1}}
+                        </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

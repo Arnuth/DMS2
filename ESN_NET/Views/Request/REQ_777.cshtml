@@ -1,0 +1,222 @@
+﻿
+@{
+    ViewBag.Title = "REQ_777";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<div class="col-sm-6" ng-controller="REQ_777_Ctrl">
+    <div class="widget-box widget-color-green2">
+        <div class="widget-header">
+            <h4 class="widget-title lighter smaller">Browse Files</h4>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main padding-8">
+                <ul id="tree2"></ul>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+<div class="widget-box widget-color-green2">
+    <div class="widget-header">
+        <h4 class="widget-title lighter smaller">Browse Files</h4>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-8">
+            <ul id="tree2" class="tree tree-unselectable" role="tree">
+            <li class="tree-branch hide" data-template="treebranch" role="treeitem" aria-expanded="false">				
+                <div class="tree-branch-header">					
+                <span class="tree-branch-name">						
+                    <i class="icon-folder ace-icon fa fa-folder"></i>						
+                    <span class="tree-label"></span>
+                </span>				
+                    </div>				
+                <ul class="tree-branch-children" role="group"></ul>				
+                <div class="tree-loader hide" role="alert">
+                <div class="tree-loading">
+                    <i class="ace-icon fa fa-refresh fa-spin blue"></i>
+                    </div>
+                    </div>						
+                </li>
+            <li class="tree-item hide" data-template="treeitem" role="treeitem">				
+                <span class="tree-item-name">				  				  
+                <span class="tree-label"></span>				
+                    </span>			
+                </li>
+            <li class="tree-branch tree-open" role="treeitem" aria-expanded="true">				
+                <div class="tree-branch-header">					
+                <span class="tree-branch-name">						
+                    <i class="icon-folder red ace-icon fa fa-folder-open"></i>						
+                    <span class="tree-label">Pictures</span>					
+                    </span>				
+                    </div>				
+                <ul class="tree-branch-children" role="group">
+                <li class="tree-branch tree-open" role="treeitem" aria-expanded="true">				
+                    <div class="tree-branch-header">					
+                    <span class="tree-branch-name">						
+                        <i class="icon-folder pink ace-icon fa fa-folder-open"></i>						
+                        <span class="tree-label">Wallpapers</span>					
+                        </span>				
+                        </div>				
+                    <ul class="tree-branch-children" role="group">
+                    <li class="tree-item" role="treeitem">				
+                        <span class="tree-item-name">				  				  
+                        <span class="tree-label">
+                            <i class="ace-icon fa fa-picture-o green"></i> wallpaper1.jpg
+                            </span>				
+                            </span>			
+                        </li>
+                    <li class="tree-item" role="treeitem">				
+                        <span class="tree-item-name">				  				  
+                        <span class="tree-label"><i class="ace-icon fa fa-picture-o green"></i> wallpaper2.jpg
+                            </span>				
+                            </span>			
+                        </li>
+                    <li class="tree-item" role="treeitem">				
+                        <span class="tree-item-name">				  				  
+                        <span class="tree-label"><i class="ace-icon fa fa-picture-o green"></i> wallpaper3.jpg
+                            </span>				
+                            </span>			
+                        </li>
+                    <li class="tree-item" role="treeitem">				
+                        <span class="tree-item-name">				  				  
+                        <span class="tree-label"><i class="ace-icon fa fa-picture-o green"></i> wallpaper4.jpg
+                            </span>				
+                            </span>			
+                        </li></ul>				
+                    <div class="tree-loader hide" role="alert">
+                    <div class="tree-loading">
+                        <i class="ace-icon fa fa-refresh fa-spin blue">
+                            </i>
+                        </div>
+                        </div>						
+                    </li>
+                <li class="tree-branch" role="treeitem" aria-expanded="false">				
+                    <div class="tree-branch-header">					
+                    <span class="tree-branch-name">						
+                        <i class="icon-folder ace-icon fa fa-folder pink"></i>						
+                        <span class="tree-label">Camera</span>					
+                        </span>				
+                        </div>				
+                    <ul class="tree-branch-children" role="group"></ul>				
+                    <div class="tree-loader hide" role="alert">
+                    <div class="tree-loading"><i class="ace-icon fa fa-refresh fa-spin blue"></i>
+                        </div>
+                        </div>						
+                    </li>
+                    </ul>				
+                <div class="tree-loader hide" role="alert"><div class="tree-loading">
+                    <i class="ace-icon fa fa-refresh fa-spin blue"></i>
+                       </div>
+                    </div>						
+                </li>
+            <li class="tree-branch tree-open" role="treeitem" aria-expanded="true">				
+                <div class="tree-branch-header">					
+                <span class="tree-branch-name">						
+                    <i class="icon-folder orange ace-icon fa fa-folder-open"></i>						
+                    <span class="tree-label">Music
+                    </span>					
+                    </span>				
+                    </div>				
+                <ul class="tree-branch-children" role="group">
+                <li class="tree-item" role="treeitem">				
+                    <span class="tree-item-name">				  				  
+                    <span class="tree-label"><i class="ace-icon fa fa-music blue"></i> song1.ogg
+                        </span>				
+                        </span>			
+                    </li>
+                <li class="tree-item" role="treeitem">				
+                    <span class="tree-item-name">				  				  
+                    <span class="tree-label"><i class="ace-icon fa fa-music blue"></i> song2.ogg
+                        </span>				
+                        </span>			
+                    </li>
+                <li class="tree-item" role="treeitem">				
+                    <span class="tree-item-name">				  				  
+                    <span class="tree-label">
+                        <i class="ace-icon fa fa-music blue"></i> song3.ogg
+                        </span>				
+                        </span>			
+                    </li>
+                <li class="tree-item" role="treeitem">				
+                    <span class="tree-item-name">				  				  
+                    <span class="tree-label">
+                        <i class="ace-icon fa fa-music blue"></i> song4.ogg
+                        </span>				
+                        </span>			
+                    </li>
+                <li class="tree-item" role="treeitem">				
+                    <span class="tree-item-name">				  				  
+                    <span class="tree-label">
+                        <i class="ace-icon fa fa-music blue"></i> song5.ogg
+                        </span>				
+                        </span>			
+                    </li>
+                    </ul>				
+                <div class="tree-loader hide" role="alert">
+                <div class="tree-loading">
+                    <i class="ace-icon fa fa-refresh fa-spin blue"></i>
+                    </div>
+                    </div>						
+                </li>
+            <li class="tree-branch" role="treeitem" aria-expanded="false">				
+                <div class="tree-branch-header">					
+                <span class="tree-branch-name">						
+                    <i class="icon-folder ace-icon fa fa-folder blue"></i>						
+                    <span class="tree-label">Video</span>					
+                    </span>				
+                    </div>				
+                <ul class="tree-branch-children" role="group"></ul>				
+                <div class="tree-loader hide" role="alert">
+                <div class="tree-loading">
+                    <i class="ace-icon fa fa-refresh fa-spin blue"></i>
+                    </div>
+                    </div>						
+                </li><li class="tree-branch" role="treeitem" aria-expanded="false">				
+                <div class="tree-branch-header">					
+                <span class="tree-branch-name">						
+                    <i class="icon-folder ace-icon fa fa-folder green"></i>						
+                    <span class="tree-label">Documents</span>					
+                    </span>				
+                    </div>				
+                <ul class="tree-branch-children" role="group"></ul>				
+                <div class="tree-loader hide" role="alert">
+                <div class="tree-loading">
+                    <i class="ace-icon fa fa-refresh fa-spin blue"></i>
+                    </div>
+                    </div>						
+                    </li>
+            <li class="tree-branch" role="treeitem" aria-expanded="false">				
+                <div class="tree-branch-header">					
+                <span class="tree-branch-name">						
+                    <i class="icon-folder ace-icon fa fa-folder"></i>						
+                    <span class="tree-label">Backup</span>					
+                    </span>				
+                    </div>				
+                <ul class="tree-branch-children" role="group"></ul>				
+                <div class="tree-loader hide" role="alert">
+                <div class="tree-loading">
+                    <i class="ace-icon fa fa-refresh fa-spin blue"></i>
+                    </div>
+                    </div>						
+                </li>
+            <li class="tree-item" role="treeitem">				
+                <span class="tree-item-name">				  				  
+                <span class="tree-label">
+                    <i class="ace-icon fa fa-file-text grey"></i> ReadMe.txt
+                    </span>				
+                    </span>			
+                </li>
+            <li class="tree-item" role="treeitem">				
+                <span class="tree-item-name">				  				  
+                <span class="tree-label">
+                    <i class="ace-icon fa fa-book blue"></i> Manual.html
+                    </span>				
+                    </span>			
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
